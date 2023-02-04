@@ -14,7 +14,7 @@ public class LimitedPriceTracker {
     public static HashMap<Long,Long> LimitedToPrice = new HashMap<>();
 
     public static void updatePrices() throws IOException {
-        Scanner scanner = new Scanner(new File("Limiteds.txt"));
+        Scanner scanner = new Scanner(new File("src/main/resources/Limiteds.txt"));
         List<Long> itemIDs = new ArrayList<Long>();
 
         while (scanner.hasNextLine()) {

@@ -1,6 +1,7 @@
 package net.yeyito;
 
 import com.beust.jcommander.internal.Nullable;
+import net.yeyito.connections.ProxyUtil;
 import net.yeyito.roblox.LimitedPriceTracker;
 import net.yeyito.util.JSON;
 import org.jsoup.Jsoup;
@@ -14,6 +15,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
 import java.time.Duration;
 import java.util.*;
@@ -230,8 +233,7 @@ public class WebsiteScraper {
         } catch (IOException e) {
             System.out.println("Error: " + e);
 
-            // discord bot sends request bang bang!!
-            Main.threadSleep(60000);
+            // VPN activate
 
             buildCookiesForBulkRequest(); // Regenerate Cookies
             return itemBulkToPriceRequest(IDs); // Try Again with new cookies
