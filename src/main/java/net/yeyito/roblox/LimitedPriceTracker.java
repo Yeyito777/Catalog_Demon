@@ -6,6 +6,7 @@ import net.yeyito.Main;
 import net.yeyito.TextFile;
 import net.yeyito.WebsiteScraper;
 import net.yeyito.connections.DiscordBot;
+import net.yeyito.util.JSON;
 import org.checkerframework.framework.qual.CFComment;
 
 import java.io.File;
@@ -15,9 +16,8 @@ import java.util.*;
 
 // Class tracks the price of all limiteds
 public class LimitedPriceTracker {
-    public static HashMap<Long,Long> LimitedToPrice = new HashMap<>();
     public static HashMap<Long,List<Object>> LimitedToInfo = new HashMap<>();
-    //List<Object> = String name, Long Price, Long RAP, Long Quantity_Sold, Long Original_Price, List<Long Price,Long Os.Time> Data Points
+    //List<Object> = String name, Long Price, Long RAP, Long Original_Price, Long Quantity_Sold, List<Long Price,Long Os.Time> Data Points
 
     public static void updatePrices() throws IOException {
         new TextFile("src/main/resources/Limiteds.txt").shuffleLines();
@@ -32,24 +32,25 @@ public class LimitedPriceTracker {
             currentLine++;
         }
         scanner.close();
-        HashMap<Long,Long> newLimitedToPrice = WebsiteScraper.itemBulkToPrice(itemIDs);
+        HashMap<Long,List<Object>> newLimitedToInfo = WebsiteScraper.itemBulkToPrice(itemIDs);
 
         String[] command = {"route","DELETE",WebsiteScraper.getHostIPfromURL("catalog.roblox.com")};
         Runtime.getRuntime().exec(command);
 
         System.out.println("Done Scanning!");
-        for (Long key : newLimitedToPrice.keySet()) {
-            if (!LimitedToPrice.containsKey(key)) {LimitedToPrice.put(key,newLimitedToPrice.get(key));}
+
+        for (Long key : newLimitedToInfo.keySet()) {
+            if (!LimitedToInfo.containsKey(key)) {LimitedToInfo.put(key,newLimitedToInfo.get(key));}
             else {
-                if (!Objects.equals(LimitedToPrice.get(key), newLimitedToPrice.get(key))) {
+                if (!Objects.equals((Long) LimitedToInfo.get(key).get(1), (Long) newLimitedToInfo.get(key).get(1))) {
 
                     String sign = "";
                     double price_difference_percentage = 0;
                     String price_difference_string;
 
-                    if (newLimitedToPrice.get(key) == null || LimitedToPrice.get(key) == null) {sign = "??";}
-                    else if (newLimitedToPrice.get(key) >= LimitedToPrice.get(key)) {sign = "+"; price_difference_percentage = (double) Math.abs(LimitedToPrice.get(key) - newLimitedToPrice.get(key)) / LimitedToPrice.get(key);}
-                    else if (newLimitedToPrice.get(key) < LimitedToPrice.get(key)) {sign = "-"; price_difference_percentage = (double) Math.abs(LimitedToPrice.get(key) - newLimitedToPrice.get(key)) / LimitedToPrice.get(key);}
+                    if (newLimitedToInfo.get(key).get(1) == null || LimitedToInfo.get(key).get(1) == null) {sign = "??";}
+                    else if ((Long) newLimitedToInfo.get(key).get(1) >= (Long) LimitedToInfo.get(key).get(1)) {sign = "+"; price_difference_percentage = (double) Math.abs((Long) LimitedToInfo.get(key).get(1) - (Long) newLimitedToInfo.get(key).get(1)) / (Long) LimitedToInfo.get(key).get(1);}
+                    else if ((Long) newLimitedToInfo.get(key).get(1) < (Long) LimitedToInfo.get(key).get(1)) {sign = "-"; price_difference_percentage = (double) Math.abs((Long) LimitedToInfo.get(key).get(1) - (Long) newLimitedToInfo.get(key).get(1)) / (Long) LimitedToInfo.get(key).get(1);}
                     price_difference_percentage = price_difference_percentage*100;
 
                     if (price_difference_percentage < 10) {price_difference_string = "Low";}
@@ -61,15 +62,21 @@ public class LimitedPriceTracker {
                     DecimalFormat decimalFormat = new DecimalFormat("#.#");
                     String formattedValue = decimalFormat.format(price_difference_percentage);
 
+                    for (Object o: WebsiteScraper.itemToInfo(key)) {
+                        newLimitedToInfo.get(key).add(o);
+                    }
+
                     Main.discordBot.sendMessageOnRegisteredChannel("all-item-price-changes",
                             key + " | " + formattedValue + "%" + " | " + price_difference_string + "\n" +
                                     "```diff\n" +
-                                    sign + "> "+ newLimitedToPrice.get(key) +"\n" +
-                                    ">> "+ LimitedToPrice.get(key) +"\n" +
-                                    "```",15);
+                                    ">> "+ LimitedToInfo.get(key).get(1) +"\n" +
+                                    sign + "> "+ newLimitedToInfo.get(key).get(1) +"\n" +
+                                    "```" + "```java\n" +
+                                    "Name: " + "\"" + newLimitedToInfo.get(key).get(0) + "\"\n" +
+                                    "RAP: " + newLimitedToInfo.get(key).get(2) +"```",15);
 
-                    LimitedToPrice.remove(key);
-                    LimitedToPrice.put(key,newLimitedToPrice.get(key));
+                    LimitedToInfo.remove(key);
+                    LimitedToInfo.put(key,newLimitedToInfo.get(key));
                 }
             }
         }

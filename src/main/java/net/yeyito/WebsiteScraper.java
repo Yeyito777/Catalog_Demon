@@ -113,9 +113,9 @@ public class WebsiteScraper {
         return StringFilter.extractLowestPriceFromHTML(html);
     }
 
-    public static HashMap<Long, Long> itemBulkToPrice(List<Long> IDs) throws IOException {
+    public static HashMap<Long, List<Object>> itemBulkToPrice(List<Long> IDs) throws IOException {
+        System.out.print("\nScanning");
         Main.runCommand(new String[]{"route","DELETE",getHostIPfromURL("catalog.roblox.com")}); // Breaks if bad handling of the first command
-
         buildCookiesForBulkRequest();
 
         if (IDs.size() <= 120) {
@@ -131,7 +131,7 @@ public class WebsiteScraper {
                 listOfIDsLists.add(listOfIDs);
             }
 
-            HashMap<Long,Long> IDsToPriceHashMap = new HashMap<>();
+            HashMap<Long,List<Object>> IDsToPriceHashMap = new HashMap<>();
             for (List<Long> IDs120: listOfIDsLists) {
                 IDsToPriceHashMap.putAll(itemBulkToPriceRequest(IDs120));
             }
@@ -211,7 +211,7 @@ public class WebsiteScraper {
         requestCookiesFromURL("https://www.roblox.com/catalog?Category=1&salesTypeFilter=2",null,"GET",0,null,false);
     }
 
-    public static HashMap<Long,Long> itemBulkToPriceRequest(List<Long> IDs) throws IOException {
+    public static HashMap<Long,List<Object>> itemBulkToPriceRequest(List<Long> IDs) throws IOException {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL("https://catalog.roblox.com/v1/catalog/items/details").openConnection();
             connection.setRequestMethod("POST");
@@ -253,7 +253,7 @@ public class WebsiteScraper {
             reader.close();
             response.close();
 
-            System.out.println("Processed Request!");
+            System.out.print(".");
             return JSON.itemBatchStringToHashMap(content.toString());
         } catch (IOException e) {
             Main.runCommand(new String[]{"route","ADD",getHostIPfromURL("catalog.roblox.com"),"MASK","255.255.255.255","192.168.0.1","METRIC","1","IF","8"}); // Breaks if Interface Index changes, or if gateway changes!
@@ -273,7 +273,7 @@ public class WebsiteScraper {
         if (reqType == 0) {
             connection.addRequestProperty("accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
             connection.addRequestProperty("accept-encoding","gzip, deflate, br");
-            connection.addRequestProperty("accept-language","es-PA,es;q=0.9");
+            connection.addRequestProperty("accept-language","en-US,en;q=0.9");
             connection.addRequestProperty("sec-ch-ua","Not_A Brand");
             connection.addRequestProperty("sec-ch-ua","v=\"99\", \"Google Chrome\"");
             connection.addRequestProperty("sec-ch-ua","v=\"109\", \"Chromium\";v=\"109\"");
@@ -289,7 +289,7 @@ public class WebsiteScraper {
         else if (reqType == 1) {
             connection.addRequestProperty("accept","application/json, text/plain, */*");
             connection.addRequestProperty("accept-encoding","gzip, deflate, br");
-            connection.addRequestProperty("accept-language","es-PA,es;q=0.9");
+            connection.addRequestProperty("accept-language","en-US,en;q=0.9");
             connection.addRequestProperty("content-type","application/json;charset=UTF-8");
             connection.addRequestProperty("origin","https://www.roblox.com");
             connection.addRequestProperty("referer","https://www.roblox.com/");
@@ -321,7 +321,7 @@ public class WebsiteScraper {
         reader.close();
         return StringFilter.extractLowestPriceFromHTML(result.toString());
     }
-    public static Long itemToRAP(long ID) throws IOException {
+    public static List<Object> itemToInfo(long ID) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) new URL("https://economy.roblox.com/v1/assets/" + ID + "/resale-data")
                 .openConnection();
 
@@ -334,7 +334,7 @@ public class WebsiteScraper {
             result.append(line);
         }
         reader.close();
-        return StringFilter.extractRAPFromHTML(result.toString());
+        return JSON.itemToInfo(result.toString());
     }
 
     @Deprecated public static String scrapeRobloxCatalogID(long ID) throws IOException {
@@ -361,21 +361,5 @@ public class WebsiteScraper {
             // Print the HTML content of the website
             return content.toString();
         } catch (Exception e) {return "";}
-    }
-
-    @Deprecated public static void scrapeRobloxIDAsync(long ID) {
-        String URL = "https://www.roblox.com/catalog/" + ID;
-        CompletableFuture<Document> completableFuture = CompletableFuture.supplyAsync(() -> {
-            try {
-                return Jsoup.connect(URL).get();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
-        });
-
-        completableFuture.thenAccept(document -> {
-            LimitedPriceTracker.LimitedToPrice.put(ID,Long.parseLong(StringFilter.extractRobuxFromHTML(document.toString())));
-        });
     }
 }
