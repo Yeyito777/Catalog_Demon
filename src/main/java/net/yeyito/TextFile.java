@@ -1,15 +1,11 @@
 package net.yeyito;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class TextFile {
     File textFile;
@@ -30,7 +26,7 @@ public class TextFile {
 
     public void writeString(String data) {
         try {
-            Path path = Paths.get(textFile.getName());
+            Path path = Paths.get("src/main/resources/Limiteds.txt");
             Files.write(path, data.getBytes(), StandardOpenOption.APPEND);
         } catch (IOException e) {
             e.printStackTrace();
@@ -50,6 +46,26 @@ public class TextFile {
             scanner.close();
             return false;
         } catch (FileNotFoundException e) {e.printStackTrace(); return false;}
+    }
+    public void shuffleLines() throws IOException {
+        File file = new File("src/main/resources/Limiteds.txt");
+        ArrayList<String> lines = new ArrayList<>();
+
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            lines.add(line);
+        }
+        reader.close();
+
+        Collections.shuffle(lines, new Random());
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+        for (String shuffledLine : lines) {
+            writer.write(shuffledLine);
+            writer.newLine();
+        }
+        writer.close();
     }
     @Deprecated public void logItemInfo(long ID) throws IOException {
         String websiteInfo = null;

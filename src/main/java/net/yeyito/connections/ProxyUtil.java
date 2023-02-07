@@ -9,7 +9,7 @@ public class ProxyUtil {
     // Sponsored by: https://www.proxynova.com/proxy-server-list/  !!
     private static int proxyIndex = 0;
     private static final String[][] proxies = {
-            new String[]{"34.117.70.177","80"}};
+            new String[]{"104.43.230.151","3128"}};
 
     private static String[] getNextProxy() {
         if (proxyIndex == proxies.length) {
@@ -27,7 +27,7 @@ public class ProxyUtil {
             proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyIP, Integer.parseInt(proxyPort)));
             System.out.println("Trying proxy: " + proxyIP + ":" + proxyPort);
             try {
-                URL url = new URL("https://catalog.roblox.com/v1/catalog/items/details");
+                URL url = new URL("https://www.proxynova.com/proxy-server-list/");
                 HttpURLConnection con = (HttpURLConnection) url.openConnection(proxy);
                 con.setConnectTimeout(5000);
                 con.setReadTimeout(5000);

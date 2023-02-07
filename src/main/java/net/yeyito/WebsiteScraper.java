@@ -1,9 +1,12 @@
 package net.yeyito;
 
 import com.beust.jcommander.internal.Nullable;
+import io.netty.channel.local.LocalAddress;
+import io.netty.channel.unix.DomainSocketAddress;
 import net.yeyito.connections.ProxyUtil;
 import net.yeyito.roblox.LimitedPriceTracker;
 import net.yeyito.util.JSON;
+import org.asynchttpclient.proxy.ProxyType;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.openqa.selenium.Cookie;
@@ -14,10 +17,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.URL;
+import java.net.*;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -27,7 +27,16 @@ public class WebsiteScraper {
     WebDriver currentDriver;
     boolean builtCookies = false;
     static HashMap<String,String> cookies = new HashMap<>();
-    static final int millisToWaitIf429 = 1000;
+
+    static NetworkInterface LIB;
+    static {
+        try {
+            LIB = NetworkInterface.getByName("192.168.0.151");
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+    }
+
     static final String[] userAgents = new String[]{
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36",
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36",
@@ -64,10 +73,21 @@ public class WebsiteScraper {
         System.out.println(Jsoup.parse(html));
     }
 
+    public static String getHostIPfromURL(String URL) {
+        try {
+            InetAddress inetAddress = InetAddress.getByName(URL);
+            return inetAddress.getHostAddress();
+
+        } catch (UnknownHostException e) {
+            System.out.println("Error: " + e.getMessage());
+            return null;
+        }
+    }
+
     public void getCatalogIDsFromOpenedURL() {
         String html = this.currentDriver.getPageSource();
         List<String> IDs = StringFilter.parseStringUsingRegexMatchAllDigits(html, "catalog/(.*?)/");
-        TextFile textFile = new TextFile("Limiteds.txt");
+        TextFile textFile = new TextFile("src/main/resources/Limiteds.txt");
 
         for (String ID: IDs) {
             if (!textFile.findString(ID)) {
@@ -94,6 +114,8 @@ public class WebsiteScraper {
     }
 
     public static HashMap<Long, Long> itemBulkToPrice(List<Long> IDs) throws IOException {
+        Main.runCommand(new String[]{"route","DELETE",getHostIPfromURL("catalog.roblox.com")}); // Breaks if bad handling of the first command
+
         buildCookiesForBulkRequest();
 
         if (IDs.size() <= 120) {
@@ -113,6 +135,9 @@ public class WebsiteScraper {
             for (List<Long> IDs120: listOfIDsLists) {
                 IDsToPriceHashMap.putAll(itemBulkToPriceRequest(IDs120));
             }
+
+            // Undo witchcraft
+
             return IDsToPriceHashMap;
         }
     }
@@ -120,6 +145,7 @@ public class WebsiteScraper {
     public static void requestCookiesFromURL(String site,@Nullable String[] requestCookies, String requestType, int requestProperties, @Nullable String payload, boolean print) throws IOException {
         URL url = new URL(site);
         HttpURLConnection authConnection = (HttpURLConnection) url.openConnection();
+
         addDefaultPropertiesToRequest(authConnection,requestProperties);
         authConnection.setRequestMethod(requestType);
         addCookiesToRequest(authConnection,requestCookies);
@@ -199,7 +225,6 @@ public class WebsiteScraper {
             connection.addRequestProperty("x-csrf-token", cookies.get("x-csrf-token"));
 
             connection.setDoOutput(true);
-
             StringBuilder sb = new StringBuilder();
             sb.append("{\"items\":[");
             for (int i = 0; i < IDs.size(); i++) {
@@ -228,13 +253,9 @@ public class WebsiteScraper {
             reader.close();
             response.close();
 
-            System.out.println("Request Done!");
             return JSON.itemBatchStringToHashMap(content.toString());
         } catch (IOException e) {
-            System.out.println("Error: " + e);
-
-            // VPN activate
-
+            Main.runCommand(new String[]{"route","ADD",getHostIPfromURL("catalog.roblox.com"),"MASK","255.255.255.255","192.168.0.1","METRIC","1","IF","8"}); // Breaks if Interface Index changes, or if gateway changes!
             buildCookiesForBulkRequest(); // Regenerate Cookies
             return itemBulkToPriceRequest(IDs); // Try Again with new cookies
         }
@@ -285,8 +306,7 @@ public class WebsiteScraper {
     }
 
     public static Long itemToPrice(long ID) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) new URL("https://economy.roblox.com/v1/assets/" + ID + "/resellers?cursor=&limit=100")
-                .openConnection();
+        HttpURLConnection connection = (HttpURLConnection) new URL("https://economy.roblox.com/v1/assets/" + ID + "/resellers?cursor=&limit=100").openConnection();
 
         connection.setRequestMethod("GET");
         connection.addRequestProperty("cookie", ".ROBLOSECURITY=" + Main.key_of_the_day);
