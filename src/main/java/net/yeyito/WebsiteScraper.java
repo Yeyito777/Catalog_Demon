@@ -253,6 +253,7 @@ public class WebsiteScraper {
             reader.close();
             response.close();
 
+            System.out.println("Processed Request!");
             return JSON.itemBatchStringToHashMap(content.toString());
         } catch (IOException e) {
             Main.runCommand(new String[]{"route","ADD",getHostIPfromURL("catalog.roblox.com"),"MASK","255.255.255.255","192.168.0.1","METRIC","1","IF","8"}); // Breaks if Interface Index changes, or if gateway changes!

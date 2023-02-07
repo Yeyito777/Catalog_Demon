@@ -16,7 +16,11 @@ public class JSON {
             JSONObject item = dataArray.getJSONObject(i);
             long id = item.getLong("id");
             Long lowestPrice = null;
+            String name = null;
             try {lowestPrice = item.getLong("lowestPrice");} catch (Exception ignored) {}
+            try {name = item.getString("name");} catch (Exception ignored) {}
+
+
             idToLowestPrice.put(id, lowestPrice);
         }
         return idToLowestPrice;
