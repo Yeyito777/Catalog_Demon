@@ -10,6 +10,7 @@ import net.yeyito.util.JSON;
 import org.checkerframework.framework.qual.CFComment;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -19,9 +20,9 @@ public class LimitedPriceTracker {
     public static HashMap<Long,List<Object>> LimitedToInfo = new HashMap<>();
     //List<Object> = String name, Long Price, Long RAP, Long Original_Price, Long Quantity_Sold, List<Long Price,Long Os.Time> Data Points
 
-    public static void updatePrices() throws IOException {
-        new TextFile("src/main/resources/Limiteds.txt").shuffleLines();
-        Scanner scanner = new Scanner(new File("src/main/resources/Limiteds.txt"));
+    public static void updatePrices() {
+        shuffleLinesRetryable();
+        Scanner scanner = scanLinesRetryable();
         List<Long> itemIDs = new ArrayList<Long>();
 
         int currentLine = 0;
@@ -32,13 +33,30 @@ public class LimitedPriceTracker {
             currentLine++;
         }
         scanner.close();
-        HashMap<Long,List<Object>> newLimitedToInfo = WebsiteScraper.itemBulkToPrice(itemIDs);
-
-        String[] command = {"route","DELETE",WebsiteScraper.getHostIPfromURL("catalog.roblox.com")};
-        Runtime.getRuntime().exec(command);
+        WebsiteScraper.itemBulkToPrice(itemIDs);
+        WebsiteScraper.routeDeleteLIB(); // Just in case
 
         System.out.println("Done Scanning!");
-
+    }
+    public static Scanner scanLinesRetryable() {
+        try {
+            return new Scanner(new File("src/main/resources/Limiteds.txt"));
+        } catch (FileNotFoundException e) {
+            Main.discordBot.sendMessageOnRegisteredChannel("all-item-price-changes"," could not scan the lines of src/main/resources/Limiteds.txt! retrying in " + WebsiteScraper.retryTimeMillis + " millis!",0);
+            Main.threadSleep(WebsiteScraper.retryTimeMillis);
+            return scanLinesRetryable();
+        }
+    }
+    public static void shuffleLinesRetryable() {
+        try {
+            new TextFile("src/main/resources/Limiteds.txt").shuffleLines();
+        } catch (IOException e) {
+            Main.discordBot.sendMessageOnRegisteredChannel("all-item-price-changes"," could not shuffle the lines of src/main/resources/Limiteds.txt! retrying in " + WebsiteScraper.retryTimeMillis + " millis!",0);
+            Main.threadSleep(WebsiteScraper.retryTimeMillis);
+            shuffleLinesRetryable();
+        }
+    }
+    public static void limitedToInfoMerge(HashMap<Long,List<Object>> newLimitedToInfo) {
         for (Long key : newLimitedToInfo.keySet()) {
             if (!LimitedToInfo.containsKey(key)) {LimitedToInfo.put(key,newLimitedToInfo.get(key));}
             else {
@@ -47,6 +65,7 @@ public class LimitedPriceTracker {
                     String sign = "";
                     double price_difference_percentage = 0;
                     String price_difference_string;
+                    String ping_role = "";
 
                     if (newLimitedToInfo.get(key).get(1) == null || LimitedToInfo.get(key).get(1) == null) {sign = "??";}
                     else if ((Long) newLimitedToInfo.get(key).get(1) >= (Long) LimitedToInfo.get(key).get(1)) {sign = "+"; price_difference_percentage = (double) Math.abs((Long) LimitedToInfo.get(key).get(1) - (Long) newLimitedToInfo.get(key).get(1)) / (Long) LimitedToInfo.get(key).get(1);}
@@ -54,10 +73,13 @@ public class LimitedPriceTracker {
                     price_difference_percentage = price_difference_percentage*100;
 
                     if (price_difference_percentage < 10) {price_difference_string = "Low";}
-                    else if (price_difference_percentage < 20) {price_difference_string = "Medium";}
-                    else if (price_difference_percentage < 40) {price_difference_string = "High";}
-                    else if (price_difference_percentage < 80) {price_difference_string = "Extreme";}
-                    else {price_difference_string = "Ludicrous";}
+                    else if (price_difference_percentage < 25) {price_difference_string = "Medium";}
+                    else if (price_difference_percentage < 40) {price_difference_string = "High"; ping_role = " | " + DiscordBot.High_Role + " | https://www.roblox.com/catalog/"+key;}
+                    else if (price_difference_percentage < 80) {price_difference_string = "Extreme"; ping_role = " | " + DiscordBot.Extreme_Role + " | https://www.roblox.com/catalog/"+key;}
+                    else {price_difference_string = "Ludicrous";  ping_role = " | " + DiscordBot.Ludicrous_Role + " | https://www.roblox.com/catalog/"+key;}
+
+                    if (sign.equals("+")) {ping_role = "";} // Only ping when down
+                    if (newLimitedToInfo.get(key).get(1) != null && (Long) newLimitedToInfo.get(key).get(1) >= 10000) {ping_role = "";} // Only ping when under 10k
 
                     DecimalFormat decimalFormat = new DecimalFormat("#.#");
                     String formattedValue = decimalFormat.format(price_difference_percentage);
@@ -67,13 +89,13 @@ public class LimitedPriceTracker {
                     }
 
                     Main.discordBot.sendMessageOnRegisteredChannel("all-item-price-changes",
-                            key + " | " + formattedValue + "%" + " | " + price_difference_string + "\n" +
+                            key + " | " + formattedValue + "%" + " | " + price_difference_string + ping_role + "\n" +
                                     "```diff\n" +
                                     ">> "+ LimitedToInfo.get(key).get(1) +"\n" +
                                     sign + "> "+ newLimitedToInfo.get(key).get(1) +"\n" +
                                     "```" + "```java\n" +
                                     "Name: " + "\"" + newLimitedToInfo.get(key).get(0) + "\"\n" +
-                                    "RAP: " + newLimitedToInfo.get(key).get(2) +"```",15);
+                                    "RAP: " + newLimitedToInfo.get(key).get(2) +"```",0);
 
                     LimitedToInfo.remove(key);
                     LimitedToInfo.put(key,newLimitedToInfo.get(key));

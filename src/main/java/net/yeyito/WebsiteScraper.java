@@ -3,6 +3,7 @@ package net.yeyito;
 import com.beust.jcommander.internal.Nullable;
 import io.netty.channel.local.LocalAddress;
 import io.netty.channel.unix.DomainSocketAddress;
+import net.yeyito.connections.DiscordBot;
 import net.yeyito.connections.ProxyUtil;
 import net.yeyito.roblox.LimitedPriceTracker;
 import net.yeyito.util.JSON;
@@ -26,16 +27,11 @@ import java.util.zip.GZIPInputStream;
 public class WebsiteScraper {
     WebDriver currentDriver;
     boolean builtCookies = false;
-    static HashMap<String,String> cookies = new HashMap<>();
+    public static HashMap<String,String> cookies = new HashMap<>();
+    public static int retryTimeMillis = 5000;
+    static String route = "LIN";
+    static int requests_in_route = 0;
 
-    static NetworkInterface LIB;
-    static {
-        try {
-            LIB = NetworkInterface.getByName("192.168.0.151");
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-    }
 
     static final String[] userAgents = new String[]{
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36",
@@ -113,13 +109,13 @@ public class WebsiteScraper {
         return StringFilter.extractLowestPriceFromHTML(html);
     }
 
-    public static HashMap<Long, List<Object>> itemBulkToPrice(List<Long> IDs) throws IOException {
+    public static void itemBulkToPrice(List<Long> IDs) {
         System.out.print("\nScanning");
-        Main.runCommand(new String[]{"route","DELETE",getHostIPfromURL("catalog.roblox.com")}); // Breaks if bad handling of the first command
-        buildCookiesForBulkRequest();
+        routeDeleteLIB();
+        requestCookiesFromURL("https://www.roblox.com/catalog?Category=1&salesTypeFilter=2",null,"GET",0,null,false);
 
         if (IDs.size() <= 120) {
-            return itemBulkToPriceRequest(IDs);
+            LimitedPriceTracker.limitedToInfoMerge(itemBulkToPriceRequest(IDs));
         } else {
             int requestNumber = (IDs.size() + 119) / 120;
             List<List<Long>> listOfIDsLists = new ArrayList<>();
@@ -131,87 +127,92 @@ public class WebsiteScraper {
                 listOfIDsLists.add(listOfIDs);
             }
 
-            HashMap<Long,List<Object>> IDsToPriceHashMap = new HashMap<>();
             for (List<Long> IDs120: listOfIDsLists) {
-                IDsToPriceHashMap.putAll(itemBulkToPriceRequest(IDs120));
+                LimitedPriceTracker.limitedToInfoMerge(itemBulkToPriceRequest(IDs120));
             }
-
-            // Undo witchcraft
-
-            return IDsToPriceHashMap;
         }
     }
-
-    public static void requestCookiesFromURL(String site,@Nullable String[] requestCookies, String requestType, int requestProperties, @Nullable String payload, boolean print) throws IOException {
-        URL url = new URL(site);
-        HttpURLConnection authConnection = (HttpURLConnection) url.openConnection();
-
-        addDefaultPropertiesToRequest(authConnection,requestProperties);
-        authConnection.setRequestMethod(requestType);
-        addCookiesToRequest(authConnection,requestCookies);
-
-        if (Objects.equals(requestType,"POST") && payload != null) {
-            authConnection.setDoOutput(true);
-            authConnection.setFixedLengthStreamingMode(payload.getBytes().length);
-            OutputStream os = authConnection.getOutputStream();
-            os.write(payload.getBytes());
-            os.flush();
-            os.close();
+    public static void routeDeleteLIB() {
+        try {
+            Main.runCommand(new String[]{"route","DELETE",getHostIPfromURL("catalog.roblox.com")});
+        } catch (IOException e) {
+            Main.discordBot.sendMessageOnRegisteredChannel("all-item-price-changes",e.toString() + " command to delete LIB route couldn't be processed, retrying in " + retryTimeMillis + " millis!",0);
+            Main.threadSleep(retryTimeMillis);
+            routeDeleteLIB();
         }
+    }
+    public static void requestCookiesFromURL(String site,@Nullable String[] requestCookies, String requestType, int requestProperties, @Nullable String payload, boolean print) {
+        try {
+            URL url = new URL(site);
+            HttpURLConnection authConnection = (HttpURLConnection) url.openConnection();
 
-        List<String> cookiesInRequest = authConnection.getHeaderFields().get("set-cookie");
-        if (cookiesInRequest != null) {
-            for (String cookie : cookiesInRequest) {
-                String cookieName = StringFilter.parseStringUsingRegex(cookie, "(.*?)=");
-                String cookieValue = StringFilter.parseStringUsingRegex(cookie, "=(.*?);");
+            addDefaultPropertiesToRequest(authConnection, requestProperties);
+            authConnection.setRequestMethod(requestType);
+            addCookiesToRequest(authConnection, requestCookies);
 
-                cookies.remove(cookieName);
-                cookies.put(cookieName, cookieName + "=" + cookieValue);
+            if (Objects.equals(requestType, "POST") && payload != null) {
+                authConnection.setDoOutput(true);
+                authConnection.setFixedLengthStreamingMode(payload.getBytes().length);
+                OutputStream os = authConnection.getOutputStream();
+                os.write(payload.getBytes());
+                os.flush();
+                os.close();
             }
-        }
 
-        if (Objects.equals(requestType, "GET")) {
-            InputStream response = authConnection.getInputStream();
-            if("gzip".equals(authConnection.getContentEncoding())){
-                response = new GZIPInputStream(response);
+            List<String> cookiesInRequest = authConnection.getHeaderFields().get("set-cookie");
+            if (cookiesInRequest != null) {
+                for (String cookie : cookiesInRequest) {
+                    String cookieName = StringFilter.parseStringUsingRegex(cookie, "(.*?)=");
+                    String cookieValue = StringFilter.parseStringUsingRegex(cookie, "=(.*?);");
+
+                    cookies.remove(cookieName);
+                    cookies.put(cookieName, cookieName + "=" + cookieValue);
+                }
             }
-            BufferedReader reader = new BufferedReader(new InputStreamReader(response));
-            String line;
-            StringBuilder content = new StringBuilder();
-            while ((line = reader.readLine()) != null) {
-                content.append(line);
+
+            if (Objects.equals(requestType, "GET")) {
+                InputStream response = authConnection.getInputStream();
+                if ("gzip".equals(authConnection.getContentEncoding())) {
+                    response = new GZIPInputStream(response);
+                }
+                BufferedReader reader = new BufferedReader(new InputStreamReader(response));
+                String line;
+                StringBuilder content = new StringBuilder();
+                while ((line = reader.readLine()) != null) {
+                    content.append(line);
+                }
+                reader.close();
+                response.close();
+
+                if (print) {
+                    System.out.println("Response body: " + content.toString());
+                }
+
+                String token = StringFilter.parseStringUsingRegex(content.toString(), "<meta name=\"csrf-token\" data-token=\"(.*?)\"");
+                if (token != null && !token.isEmpty()) {
+                    cookies.remove("x-csrf-token");
+                    cookies.put("x-csrf-token", token);
+                }
             }
-            reader.close();
-            response.close();
 
             if (print) {
-                System.out.println("Response body: " + content.toString());
+                System.out.println(authConnection.getResponseCode());
+                System.out.println("Response: " + authConnection.getResponseMessage() + "\n");
+
+                for (String s : authConnection.getHeaderFields().keySet()) {
+                    System.out.println(s + " = " + authConnection.getHeaderFields().get(s));
+                }
+
+                System.out.println(cookies);
             }
-
-            String token = StringFilter.parseStringUsingRegex(content.toString(),"<meta name=\"csrf-token\" data-token=\"(.*?)\"");
-            if (token != null && !token.isEmpty()) {
-                cookies.remove("x-csrf-token");
-                cookies.put("x-csrf-token",token);
-            }
-        }
-
-        if (print) {
-            System.out.println(authConnection.getResponseCode());
-            System.out.println("Response: " + authConnection.getResponseMessage() + "\n");
-
-            for (String s: authConnection.getHeaderFields().keySet()) {
-                System.out.println(s + " = " + authConnection.getHeaderFields().get(s));
-            }
-
-            System.out.println(cookies);
+        } catch (Exception e) {
+            Main.discordBot.sendMessageOnRegisteredChannel("all-item-price-changes",e.toString() + " retrying after" + retryTimeMillis + " millis!",0);
+            Main.threadSleep(retryTimeMillis);
+            requestCookiesFromURL(site,requestCookies,requestType,requestProperties,payload,print);
         }
     }
 
-    public static void buildCookiesForBulkRequest() throws IOException {
-        requestCookiesFromURL("https://www.roblox.com/catalog?Category=1&salesTypeFilter=2",null,"GET",0,null,false);
-    }
-
-    public static HashMap<Long,List<Object>> itemBulkToPriceRequest(List<Long> IDs) throws IOException {
+    public static HashMap<Long,List<Object>> itemBulkToPriceRequest(List<Long> IDs) {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL("https://catalog.roblox.com/v1/catalog/items/details").openConnection();
             connection.setRequestMethod("POST");
@@ -253,15 +254,35 @@ public class WebsiteScraper {
             reader.close();
             response.close();
 
+            requests_in_route++;
             System.out.print(".");
             return JSON.itemBatchStringToHashMap(content.toString());
         } catch (IOException e) {
-            Main.runCommand(new String[]{"route","ADD",getHostIPfromURL("catalog.roblox.com"),"MASK","255.255.255.255","192.168.0.1","METRIC","1","IF","8"}); // Breaks if Interface Index changes, or if gateway changes!
-            buildCookiesForBulkRequest(); // Regenerate Cookies
+            // Sometimes it always 404's even on return and that fucks with it - fix 404 issue null
+            if (requests_in_route >= 10) {
+                requests_in_route = 0;
+                routeChangeToLIB();
+                requestCookiesFromURL("https://www.roblox.com/catalog?Category=1&salesTypeFilter=2",null,"GET",0,null,false); // Regenerate Cookies
+            } else {
+                Main.discordBot.sendMessageOnRegisteredChannel("all-item-price-changes",e.toString() + " error when route hasn't gotten 10 successful requests, retrying in " + retryTimeMillis + " millis! And reloading cookies.",0);
+                Main.threadSleep(retryTimeMillis);
+                requestCookiesFromURL("https://www.roblox.com/catalog?Category=1&salesTypeFilter=2",null,"GET",0,null,false); // Regenerate Cookies
+            }
+
             return itemBulkToPriceRequest(IDs); // Try Again with new cookies
         }
     }
 
+    public static void routeChangeToLIB() {
+        try {
+            Main.runCommand(new String[]{"route", "ADD", getHostIPfromURL("catalog.roblox.com"), "MASK", "255.255.255.255", "192.168.0.1", "METRIC", "1", "IF", "8"}); // Breaks if Interface Index changes, or if gateway changes!
+            route = "LIB";
+        } catch (IOException eCMD) {
+            Main.discordBot.sendMessageOnRegisteredChannel("all-item-price-changes",eCMD.toString() + " retrying in " + retryTimeMillis + " millis!",0);
+            Main.threadSleep(retryTimeMillis);
+            routeChangeToLIB();
+        }
+    }
     public static void addCookiesToRequest(HttpURLConnection connection, String[] requestCookies) {
         if (requestCookies != null) {
             for (String cookie : requestCookies) {
@@ -321,20 +342,26 @@ public class WebsiteScraper {
         reader.close();
         return StringFilter.extractLowestPriceFromHTML(result.toString());
     }
-    public static List<Object> itemToInfo(long ID) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) new URL("https://economy.roblox.com/v1/assets/" + ID + "/resale-data")
-                .openConnection();
+    public static List<Object> itemToInfo(long ID) {
+        try {
+            HttpURLConnection connection = (HttpURLConnection) new URL("https://economy.roblox.com/v1/assets/" + ID + "/resale-data")
+                    .openConnection();
 
-        connection.setRequestMethod("GET");
+            connection.setRequestMethod("GET");
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        StringBuilder result = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            result.append(line);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder result = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+            reader.close();
+            return JSON.itemToInfo(result.toString());
+        } catch (Exception e) {
+            Main.discordBot.sendMessageOnRegisteredChannel("all-item-price-changes",e.toString() + " could not retrieve item info of id " + ID + " retrying in " + retryTimeMillis + " millis!",0);
+            Main.threadSleep(retryTimeMillis);
+            return itemToInfo(ID);
         }
-        reader.close();
-        return JSON.itemToInfo(result.toString());
     }
 
     @Deprecated public static String scrapeRobloxCatalogID(long ID) throws IOException {
