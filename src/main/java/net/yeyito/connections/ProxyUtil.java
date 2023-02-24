@@ -5,7 +5,7 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
 
-public class ProxyUtil {
+@Deprecated public class ProxyUtil {
     // Sponsored by: https://www.proxynova.com/proxy-server-list/  !!
     private static int proxyIndex = 0;
     private static final String[][] proxies = {

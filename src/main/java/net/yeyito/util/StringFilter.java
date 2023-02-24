@@ -1,4 +1,4 @@
-package net.yeyito;
+package net.yeyito.util;
 
 import java.util.ArrayList;
 import java.util.List;

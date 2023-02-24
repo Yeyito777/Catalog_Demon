@@ -48,4 +48,15 @@ public class JSON {
 
         return itemInfo;
     }
+
+    public static List<String> getItemIdsFromRolimonAPI(String content) {
+        List<String> IDs = new ArrayList<>();
+        JSONArray jsonArray = new JSONArray(content);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            long id = jsonObject.getLong("roblox_assetid");
+            IDs.add(String.valueOf(id));
+        }
+        return IDs;
+    }
 }

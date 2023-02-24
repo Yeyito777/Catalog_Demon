@@ -1,6 +1,7 @@
 package net.yeyito;
 
 import com.beust.jcommander.internal.Nullable;
+import net.yeyito.util.StringFilter;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -12,134 +13,178 @@ import java.util.zip.GZIPInputStream;
 public class VirtualBrowser {
     static String user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36";
     public List<String> cookies = new ArrayList<>();
-    public HashMap<String,Object> openWebsite(String site, String requestMethod,@Nullable HashMap<String,String> requestHeaders, @Nullable String[] requestCookies, @Nullable String payload, boolean logCookies, boolean print) {
-        try {
-            // Opening Connection
-            HttpURLConnection connection = (HttpURLConnection) new URL(site).openConnection();
-            // Setting Request Method
-            connection.setRequestMethod(requestMethod);
-            // Adding Headers
-            if (requestHeaders != null) {
-                for (String headerName : requestHeaders.keySet()) {
-                    connection.addRequestProperty(headerName, requestHeaders.get(headerName));
-                    if (print) {
-                        System.out.println("Header: " + headerName + ": " + requestHeaders.get(headerName));
-                    }
-                }
-            }
-            // Adding Cookies
-            if (requestCookies != null) {
-                for (String cookie : requestCookies) {
-                    connection.addRequestProperty("cookie", cookie);
-                    if (print) {
-                        System.out.println("Cookie: " + cookie);
-                    }
-                }
-            }
-            // Adding Payload
-            if (Objects.equals(requestMethod, "POST") && payload != null) {
-                connection.setDoOutput(true);
-                connection.setFixedLengthStreamingMode(payload.getBytes().length);
-                OutputStream os = connection.getOutputStream();
-                os.write(payload.getBytes());
-                os.flush();
-                os.close();
-                System.out.println("Payload added. conent-length set to: " + payload.getBytes().length);
-            } else if (Objects.equals(requestMethod,"POST")) {
-                connection.setDoOutput(true);
-                connection.setFixedLengthStreamingMode(0);
-            }
-            // * RESPONSE * //
-            // Logging Response Cookies
-            if (logCookies) {
-                List<String> cookiesInRequest = connection.getHeaderFields().get("set-cookie");
-                if (cookiesInRequest != null) {
-                    for (String cookie : cookiesInRequest) {
-                        String cookieName = StringFilter.parseStringUsingRegex(cookie, "(.*?)=");
-                        String cookieValue = StringFilter.parseStringUsingRegex(cookie, "=(.*?);");
-
-                        this.cookies.remove(cookieName);
-                        this.cookies.add(cookieName + "=" + cookieValue);
-                        if (print) {
-                            System.out.println("Server returned cookie: " + cookieName + "=" + cookieValue);
-                        }
-                    }
-                }
-            }
-            // Getting Response
-            String serverResponse = null;
-            if (connection.getInputStream().available() > 0) {
-                InputStream response = connection.getInputStream();
-                if ("gzip".equals(connection.getContentEncoding())) {
-                    response = new GZIPInputStream(response);
-                }
-                if ("deflate".equals(connection.getContentEncoding())) {
-                    response = new DeflaterInputStream(response);
-                }
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader(response));
-                String line;
-                StringBuilder content = new StringBuilder();
-                while ((line = reader.readLine()) != null) {
-                    content.append(line);
-                }
-                reader.close();
-                response.close();
-
-                serverResponse = content.toString();
+    public boolean printCURL = false;
+    public boolean logCookiesCURL = true;
+    public HashMap<String,Object> openWebsite(String site, String requestMethod,@Nullable HashMap<String,String> requestHeaders, @Nullable String[] requestCookies, @Nullable String payload, boolean logCookies, boolean print) throws IOException {
+        // Opening Connection
+        HttpURLConnection connection = (HttpURLConnection) new URL(site).openConnection();
+        // Setting Request Method
+        connection.setRequestMethod(requestMethod);
+        // Adding Headers
+        if (requestHeaders != null) {
+            for (String headerName : requestHeaders.keySet()) {
+                connection.addRequestProperty(headerName, requestHeaders.get(headerName));
                 if (print) {
-                    System.out.println("Server returned response: " + serverResponse);
+                    System.out.println("Header: " + headerName + ": " + requestHeaders.get(headerName));
                 }
             }
-            // Getting Response Headers
-            Map<String, List<String>> responseHeaders = connection.getHeaderFields();
-            if (print) {
-                for (String s : responseHeaders.keySet()) {
-                    System.out.println("Response header: " + s + ": " + connection.getHeaderFields().get(s));
-                }
-            }
-            // Getting Response Code
-            int responseCode = connection.getResponseCode();
-            if (print) {System.out.println("Response code: " + responseCode);}
-
-            HashMap<String, Object> returnObject = new HashMap<>();
-            returnObject.put("responseCode",responseCode);
-            returnObject.put("responseHeaders",responseHeaders);
-            returnObject.put("response",serverResponse);
-
-            return returnObject;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
         }
+        // Adding Cookies
+        if (requestCookies != null) {
+            for (String cookie : requestCookies) {
+                connection.addRequestProperty("cookie", cookie);
+                if (print) {
+                    System.out.println("Cookie: " + cookie);
+                }
+            }
+        }
+        // Adding Payload
+        if (Objects.equals(requestMethod, "POST") && payload != null) {
+            connection.setDoOutput(true);
+            connection.setFixedLengthStreamingMode(payload.getBytes().length);
+            OutputStream os = connection.getOutputStream();
+            os.write(payload.getBytes());
+            os.flush();
+            os.close();
+            if (print) {System.out.println("Payload added. conent-length set to: " + payload.getBytes().length);}
+        } else if (Objects.equals(requestMethod,"POST")) {
+            connection.setDoOutput(true);
+            connection.setFixedLengthStreamingMode(0);
+        }
+
+        // * RESPONSE * //
+        // Logging Response Cookies
+        if (logCookies) {
+            List<String> cookiesInRequest = connection.getHeaderFields().get("set-cookie");
+            if (cookiesInRequest != null) {
+                for (String cookie : cookiesInRequest) {
+                    String cookieName = StringFilter.parseStringUsingRegex(cookie, "(.*?)=");
+                    String cookieValue = StringFilter.parseStringUsingRegex(cookie, "=(.*?);");
+
+                    this.cookies.removeIf(savedCookie -> savedCookie.contains(cookieName)); //Remove if contains cookie name since cookie = cookiename+=+value
+                    this.cookies.add(cookieName + "=" + cookieValue);
+
+                    if (print) {
+                        System.out.println("Server returned cookie: " + cookieName + "=" + cookieValue);
+                    }
+                }
+            }
+        }
+        // Getting Possible Errors
+        if (connection.getErrorStream() != null) {
+            InputStream response = connection.getErrorStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(response));
+            String line;
+            StringBuilder content = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                content.append(line);
+            }
+            reader.close();
+            response.close();
+            System.out.println(content);
+        }
+
+        // Getting Response
+        String serverResponse = null;
+        if (connection.getInputStream().available() > 0) {
+            InputStream response = connection.getInputStream();
+            if ("gzip".equals(connection.getContentEncoding())) {
+                response = new GZIPInputStream(response);
+            }
+            if ("deflate".equals(connection.getContentEncoding())) {
+                response = new DeflaterInputStream(response);
+            }
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(response));
+            String line;
+            StringBuilder content = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                content.append(line);
+            }
+            reader.close();
+            response.close();
+
+            serverResponse = content.toString();
+            if (print) {
+                System.out.println("Server returned response: " + serverResponse);
+            }
+        }
+        // Getting Response Headers
+        Map<String, List<String>> responseHeaders = connection.getHeaderFields();
+        if (print) {
+            for (String s : responseHeaders.keySet()) {
+                System.out.println("Response header: " + s + ": " + connection.getHeaderFields().get(s));
+            }
+        }
+        // Getting Response Code
+        int responseCode = connection.getResponseCode();
+        if (print) {System.out.println("Response code: " + responseCode);}
+
+        HashMap<String, Object> returnObject = new HashMap<>();
+        returnObject.put("responseCode",responseCode);
+        returnObject.put("responseHeaders",responseHeaders);
+        returnObject.put("response",serverResponse);
+
+        return returnObject;
     }
 
-    public HashMap<String, Object> curlToOpenWebsite(String cURL) {
+    public HashMap<String, Object> curlToOpenWebsite(String cURL) throws IOException {
+        String site = StringFilter.parseStringUsingRegex(cURL,"'(.*?)'");
+        String requestMethod = "GET";
+        HashMap<String, String> requestHeaders = new HashMap<>();
+        String[] requestCookies = buildCookies(this.cookies,null);
+        String payload = null;
+
+        String[] arguments = cURL.split("\\\\");
+        for (String argument: arguments) {
+            if (argument.contains("-H '")) {requestHeaders.put(StringFilter.parseStringUsingRegex(argument,"-H '(.*?):").stripLeading().stripTrailing(),StringFilter.parseStringUsingRegex(argument,StringFilter.parseStringUsingRegex(argument,"-H '(.*?):") + ":(.*?)'").stripLeading().stripTrailing());}
+            else if (argument.contains("--data-raw '")) {payload = StringFilter.parseStringUsingRegex(argument,"'(.*?)' \\\\"); requestMethod = "POST";}
+        }
+
+        return openWebsite(site, requestMethod, requestHeaders, requestCookies, payload, this.logCookiesCURL, this.printCURL);
+    }
+
+    public HashMap<String, Object> curlToOpenWebsite(String cURL,String header) throws IOException {
+        String site = StringFilter.parseStringUsingRegex(cURL,"'(.*?)'");
+        String requestMethod = "GET";
+        HashMap<String, String> requestHeaders = new HashMap<>();
+        String[] requestCookies = buildCookies(this.cookies,null);
+        String payload = null;
+
+        String[] arguments = cURL.split("\\\\");
+        for (String argument: arguments) {
+            if (argument.contains("-H '")) {requestHeaders.put(StringFilter.parseStringUsingRegex(argument,"-H '(.*?):").stripLeading().stripTrailing(),StringFilter.parseStringUsingRegex(argument,StringFilter.parseStringUsingRegex(argument,"-H '(.*?):") + ":(.*?)'").stripLeading().stripTrailing());}
+            else if (argument.contains("--data-raw '")) {payload = StringFilter.parseStringUsingRegex(argument,"'(.*?)'"); requestMethod = "POST";}
+        }
+        requestHeaders.put(StringFilter.parseStringUsingRegex(header,"-H '(.*?):").stripLeading().stripTrailing(),StringFilter.parseStringUsingRegex(header,StringFilter.parseStringUsingRegex(header,"-H '(.*?):") + ":(.*?)'").stripLeading().stripTrailing());
+        return openWebsite(site, requestMethod, requestHeaders, requestCookies, payload, this.logCookiesCURL, this.printCURL);
+    }
+
+    public HashMap<String, Object> curlToOpenWebsite(String cURL,String[] headers) {
         try {
-            String site = "";
+            String site = StringFilter.parseStringUsingRegex(cURL,"'(.*?)'");
             String requestMethod = "GET";
             HashMap<String, String> requestHeaders = new HashMap<>();
-            String[] requestCookies = null;
+            String[] requestCookies = buildCookies(this.cookies,null);
             String payload = null;
-            boolean logCookies = false;
-            boolean print = false;
 
-            String[] commands = cURL.split("\\^\n");
-            for (int i = 0; i < commands.length; i++) {
-                String command = commands[i];
-                System.out.println(command);
-                if (command.contains("https:")) {site = StringFilter.parseStringUsingRegex(commands[i],"\"(.*?)\"");}
-                if (command.contains("-H \"")) {requestHeaders.put(StringFilter.parseStringUsingRegex(commands[i],"\"(.*?):"),StringFilter.parseStringUsingRegex(commands[i],"(?<=:)(?s)(.*$)").stripLeading().stripTrailing().substring(0,StringFilter.parseStringUsingRegex(commands[i],"(?<=:)(?s)(.*$)").stripLeading().stripTrailing().length()-1).replaceAll("\\^","").replaceAll("\\\\",""));};
+            String[] arguments = cURL.split("\\\\");
+            for (String argument: arguments) {
+                if (argument.contains("-H '")) {requestHeaders.put(StringFilter.parseStringUsingRegex(argument,"-H '(.*?):").stripLeading().stripTrailing(),StringFilter.parseStringUsingRegex(argument,StringFilter.parseStringUsingRegex(argument,"-H '(.*?):") + ":(.*?)'").stripLeading().stripTrailing());}
+                else if (argument.contains("--data-raw '")) {payload = StringFilter.parseStringUsingRegex(argument,"'(.*?)' \\\\"); requestMethod = "POST";}
             }
-            System.out.println(site);
-            System.out.println(requestHeaders);
 
-            return openWebsite(site, requestMethod, requestHeaders, requestCookies, payload, logCookies, print);
+            for (String header: headers) {
+                requestHeaders.put(StringFilter.parseStringUsingRegex(header,"-H '(.*?):").stripLeading().stripTrailing(),StringFilter.parseStringUsingRegex(header,StringFilter.parseStringUsingRegex(header,"-H '(.*?):") + ":(.*?)'").stripLeading().stripTrailing());
+            }
+
+            return openWebsite(site, requestMethod, requestHeaders, requestCookies, payload, this.logCookiesCURL, this.printCURL);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
+
 
     public String[] buildCookies(List<String> preset,@Nullable String[] remove) {
         String[] newCookies;
@@ -175,7 +220,7 @@ public class VirtualBrowser {
         return headers;
     }
 
-    public HashMap<String,String> getHeadersPreset(String preset) {
+    @Deprecated public HashMap<String,String> getHeadersPreset(String preset) {
         HashMap<String,String> headers = new HashMap<>();
         if (Objects.equals(preset, "roblox-login")) {
             headers.put("accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");

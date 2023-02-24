@@ -1,13 +1,9 @@
 package net.yeyito.roblox;
 
-import net.dv8tion.jda.internal.entities.channel.concrete.TextChannelImpl;
-import net.dv8tion.jda.internal.managers.channel.concrete.TextChannelManagerImpl;
 import net.yeyito.Main;
-import net.yeyito.TextFile;
-import net.yeyito.WebsiteScraper;
+import net.yeyito.util.TextFile;
 import net.yeyito.connections.DiscordBot;
-import net.yeyito.util.JSON;
-import org.checkerframework.framework.qual.CFComment;
+import net.yeyito.connections.RouteManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,17 +29,17 @@ public class LimitedPriceTracker {
             currentLine++;
         }
         scanner.close();
-        WebsiteScraper.itemBulkToPrice(itemIDs);
-        WebsiteScraper.routeDeleteLIB(); // Just in case
+        CatalogScanner.itemBulkToPrice(itemIDs);
+        RouteManager.deleteRoute("catalog.roblox.com"); // Just in case
 
-        System.out.println("Done Scanning!");
+        System.out.print("Done Scanning!");
     }
     public static Scanner scanLinesRetryable() {
         try {
             return new Scanner(new File("src/main/resources/Limiteds.txt"));
         } catch (FileNotFoundException e) {
-            Main.discordBot.sendMessageOnRegisteredChannel("all-item-price-changes"," could not scan the lines of src/main/resources/Limiteds.txt! retrying in " + WebsiteScraper.retryTimeMillis + " millis!",0);
-            Main.threadSleep(WebsiteScraper.retryTimeMillis);
+            Main.discordBot.sendMessageOnRegisteredChannel("all-item-price-changes"," could not scan the lines of src/main/resources/Limiteds.txt! retrying in " + Main.getDefaultRetryTime() + " millis!",0);
+            Main.threadSleep(Main.getDefaultRetryTime());
             return scanLinesRetryable();
         }
     }
@@ -51,8 +47,8 @@ public class LimitedPriceTracker {
         try {
             new TextFile("src/main/resources/Limiteds.txt").shuffleLines();
         } catch (IOException e) {
-            Main.discordBot.sendMessageOnRegisteredChannel("all-item-price-changes"," could not shuffle the lines of src/main/resources/Limiteds.txt! retrying in " + WebsiteScraper.retryTimeMillis + " millis!",0);
-            Main.threadSleep(WebsiteScraper.retryTimeMillis);
+            Main.discordBot.sendMessageOnRegisteredChannel("all-item-price-changes"," could not shuffle the lines of src/main/resources/Limiteds.txt! retrying in " + Main.getDefaultRetryTime() + " millis!",0);
+            Main.threadSleep(Main.getDefaultRetryTime());
             shuffleLinesRetryable();
         }
     }
@@ -84,7 +80,7 @@ public class LimitedPriceTracker {
                     DecimalFormat decimalFormat = new DecimalFormat("#.#");
                     String formattedValue = decimalFormat.format(price_difference_percentage);
 
-                    for (Object o: WebsiteScraper.itemToInfo(key)) {
+                    for (Object o: CatalogScanner.itemToInfo(key)) {
                         newLimitedToInfo.get(key).add(o);
                     }
 
