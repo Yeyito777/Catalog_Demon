@@ -17,6 +17,11 @@ public class VirtualBrowser {
     public boolean printCURL = false;
     public boolean logCookiesCURL = true;
     private Proxy proxy = null;
+
+    private boolean muted = false;
+    public void muteErrors() {this.muted = true;}
+    public void unmuteErrors() {this.muted = false;}
+
     public HashMap<String,Object> openWebsite(String site, String requestMethod,@Nullable HashMap<String,String> requestHeaders, @Nullable String[] requestCookies, @Nullable String payload, boolean logCookies, boolean print) throws IOException {
         // Opening Connection
         HttpURLConnection connection;
@@ -75,7 +80,7 @@ public class VirtualBrowser {
             }
         }
         // Getting Possible Errors
-        if (connection.getErrorStream() != null) {
+        if (connection.getErrorStream() != null && !muted) {
             InputStream response = connection.getErrorStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(response));
             String line;
@@ -164,29 +169,24 @@ public class VirtualBrowser {
         return openWebsite(site, requestMethod, requestHeaders, requestCookies, payload, this.logCookiesCURL, this.printCURL);
     }
 
-    public HashMap<String, Object> curlToOpenWebsite(String cURL,String[] headers) {
-        try {
-            String site = StringFilter.parseStringUsingRegex(cURL,"'(.*?)'");
-            String requestMethod = "GET";
-            HashMap<String, String> requestHeaders = new HashMap<>();
-            String[] requestCookies = buildCookies(this.cookies,null);
-            String payload = null;
+    public HashMap<String, Object> curlToOpenWebsite(String cURL,String[] headers) throws IOException {
+        String site = StringFilter.parseStringUsingRegex(cURL,"'(.*?)'");
+        String requestMethod = "GET";
+        HashMap<String, String> requestHeaders = new HashMap<>();
+        String[] requestCookies = buildCookies(this.cookies,null);
+        String payload = null;
 
-            String[] arguments = cURL.split("\\\\");
-            for (String argument: arguments) {
-                if (argument.contains("-H '")) {requestHeaders.put(StringFilter.parseStringUsingRegex(argument,"-H '(.*?):").stripLeading().stripTrailing(),StringFilter.parseStringUsingRegex(argument,StringFilter.parseStringUsingRegex(argument,"-H '(.*?):") + ":(.*?)'").stripLeading().stripTrailing());}
-                else if (argument.contains("--data-raw '")) {payload = StringFilter.parseStringUsingRegex(argument,"'(.*?)' \\\\"); requestMethod = "POST";}
-            }
-
-            for (String header: headers) {
-                requestHeaders.put(StringFilter.parseStringUsingRegex(header,"-H '(.*?):").stripLeading().stripTrailing(),StringFilter.parseStringUsingRegex(header,StringFilter.parseStringUsingRegex(header,"-H '(.*?):") + ":(.*?)'").stripLeading().stripTrailing());
-            }
-
-            return openWebsite(site, requestMethod, requestHeaders, requestCookies, payload, this.logCookiesCURL, this.printCURL);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        String[] arguments = cURL.split("\\\\");
+        for (String argument: arguments) {
+            if (argument.contains("-H '")) {requestHeaders.put(StringFilter.parseStringUsingRegex(argument,"-H '(.*?):").stripLeading().stripTrailing(),StringFilter.parseStringUsingRegex(argument,StringFilter.parseStringUsingRegex(argument,"-H '(.*?):") + ":(.*?)'").stripLeading().stripTrailing());}
+            else if (argument.contains("--data-raw '")) {payload = StringFilter.parseStringUsingRegex(argument,"'(.*?)' \\\\"); requestMethod = "POST";}
         }
+
+        for (String header: headers) {
+            requestHeaders.put(StringFilter.parseStringUsingRegex(header,"-H '(.*?):").stripLeading().stripTrailing(),StringFilter.parseStringUsingRegex(header,StringFilter.parseStringUsingRegex(header,"-H '(.*?):") + ":(.*?)'").stripLeading().stripTrailing());
+        }
+
+        return openWebsite(site, requestMethod, requestHeaders, requestCookies, payload, this.logCookiesCURL, this.printCURL);
     }
 
 

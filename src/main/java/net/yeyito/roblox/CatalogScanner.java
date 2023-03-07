@@ -9,36 +9,55 @@ import net.yeyito.util.JSON;
 import java.io.*;
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class CatalogScanner {
     static VirtualBrowser virtualBrowser = new VirtualBrowser();
     static String XCSRF_token = "";
     static int requestsInConnection = 0;
+    static boolean initComplete = false;
     public static class CatalogSummary {
-        static Date startTime;
-        static long startTimeNanos;
-        static Date endTime;
+        static int index = 0;
+        static String[] ANSI_COLORS = new String[]{"\u001B[30m","\u001B[31m","\u001B[32m","\u001B[33m","\u001B[34m","\u001B[35m","\u001B[36m","\u001B[37m"};
+        static HashMap<Connection,String> conToColor = new HashMap<>();
+        static long startTime;
+        static long endTime;
+        static Date startDate;
         static long itemsScanned = 0;
 
         public static void init() {
-            startTime = Date.from(Instant.now());
-            startTimeNanos = System.nanoTime();
+            startTime = System.nanoTime();
+            startDate = Date.from(Instant.now());
+            System.out.print("\n");
         }
         public static void summarize() {
-            endTime = Date.from(Instant.now());
-            System.out.print("\n\u001B[34m" + "CATALOG SCANNER SUMMARY:\n" + "Start Time: " + startTime + "\n End Time: " + endTime + "\n Items Scanned: " + itemsScanned +
-                    "\n Items Scanned Per Second: " + itemsScanned/((System.nanoTime()-startTimeNanos)/1e+9) + "\u001B[0m");
+            endTime = System.nanoTime();
+            int seconds = (int) ((endTime - startTime)/1e+9);
+            int itemsScannedPerSecond = (int) (itemsScanned / seconds);
+            System.out.print("\n\u001B[34m" + "CATALOG SCANNER SUMMARY:\n" + " Start Date: " + startDate + "\n End Date: " + Date.from(Instant.now()) + "\n Items Scanned: " + itemsScanned +
+                    "\n Items Scanned Per Second: " + itemsScannedPerSecond + "\u001B[0m");
         }
 
-        public static void count(int number) {
+        public static void count(int number, Connection connection) {
             itemsScanned = itemsScanned+number;
+            if (connection == null) {
+                System.out.print("." + "\u001B[0m");
+            } else {
+                if (conToColor.containsKey(connection)) {System.out.print(conToColor.get(connection) + "." + "\u001B[0m");}
+                else {
+                    conToColor.put(connection,ANSI_COLORS[index]);
+                    index++;
+                    if (index >= ANSI_COLORS.length) {index = 0;}
+                    System.out.print(conToColor.get(connection) + "." + "\u001B[0m");
+                }
+            }
         }
     }
     public static void itemBulkToPrice(List<Long> IDs) {
-        System.out.print("\nScanning"); CatalogSummary.init();
+        if (!initComplete) {CatalogSummary.init(); virtualBrowser.muteErrors(); initComplete = true;}
 
         if (IDs.size() <= 120) {
-            LimitedPriceTracker.limitedToInfoMerge(itemBulkToPriceRequest(IDs));
+            LimitedPriceTracker.limitedToInfoMerge(Objects.requireNonNull(itemBulkToPriceRequest(IDs, getXCSRF_Token(),null)));
         } else {
             int requestNumber = (IDs.size() + 119) / 120;
             List<List<Long>> listOfIDsLists = new ArrayList<>();
@@ -50,20 +69,25 @@ public class CatalogScanner {
                 listOfIDsLists.add(listOfIDs);
             }
 
+            Connection connection = null;
             for (List<Long> IDs120 : listOfIDsLists) {
                 if (requestsInConnection == 0 || requestsInConnection == 10) {
-                    Connection connection = Connection.getNextConnection();
+                    connection = new Connection(Connection.TYPE.PROXY,new String[]{"true"});
                     connection.connect(virtualBrowser);
                     requestsInConnection = 0;
                 }
-                LimitedPriceTracker.limitedToInfoMerge(itemBulkToPriceRequest(IDs120));
-                requestsInConnection++; CatalogSummary.count(120);
+
+                if (requestsInConnection == 0) {XCSRF_token = getXCSRF_Token(); for (Connection c : Connection.connections) {if (c.active && c.getConnectionTYPE() != Connection.TYPE.NONE) {Main.threadSleep((int) (Main.getDefaultRetryTime()));}}}
+                Connection finalConnection = connection;
+                CompletableFuture.runAsync(() -> {LimitedPriceTracker.limitedToInfoMerge(Objects.requireNonNull(itemBulkToPriceRequest(IDs120, XCSRF_token, finalConnection)));});
+
+                requestsInConnection++;
+                Main.threadSleep(500);
             }
         }
     }
 
-    public static HashMap<Long,List<Object>> itemBulkToPriceRequest(List<Long> IDs) {
-        if (requestsInConnection == 0) {XCSRF_token = getXCSRF_Token(); for (Connection c : Connection.connections) {if (c.active && c.getConnectionTYPE() != Connection.TYPE.NONE) {Main.threadSleep((int) (Main.getDefaultRetryTime()));}}}
+    public static HashMap<Long,List<Object>> itemBulkToPriceRequest(List<Long> IDs,String token,Connection connection) {
         try {
             StringBuilder payload = new StringBuilder();
             payload.append("{\"items\":[");
@@ -90,22 +114,12 @@ public class CatalogScanner {
                     "  -H 'sec-fetch-site: same-site' \\\n" +
                     "  -H 'user-agent: "+ userAgents[new Random().nextInt(0,userAgents.length)] +"' \\\n" +
                     "  --data-raw '" + payload + "' \\\n" +
-                    "  --compressed", "  -H 'x-csrf-token: " + XCSRF_token + "' \\\n");
-            System.out.print(".");
+                    "  --compressed", "  -H 'x-csrf-token: " + token + "' \\\n");
+            CatalogSummary.count(120,connection);
             return JSON.itemBatchStringToHashMap(itemsResponse.get("response").toString());
         } catch (IOException e) {
-            if (e.getMessage().contains("Server returned HTTP response code: 429")) {
-                Connection connection = Connection.getNextConnection();
-                connection.connect(virtualBrowser);
-                XCSRF_token = getXCSRF_Token();
-                requestsInConnection = 0;
-                return itemBulkToPriceRequest(IDs);
-            }
-            Main.discordBot.sendMessageOnRegisteredChannel("all-item-price-changes",e.getMessage() + " error when route hasn't gotten 10 successful requests, retrying in " + Main.getDefaultRetryTime() + " millis! And reloading cookies.",0);
-            Main.threadSleep(Main.getDefaultRetryTime());
-            XCSRF_token = getXCSRF_Token();
-
-            return itemBulkToPriceRequest(IDs); // Try Again with new cookies
+            System.out.print("*");
+            return null;
         }
     }
 

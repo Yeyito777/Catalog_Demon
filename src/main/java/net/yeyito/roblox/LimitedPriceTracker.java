@@ -30,8 +30,6 @@ public class LimitedPriceTracker {
         }
         scanner.close();
         CatalogScanner.itemBulkToPrice(itemIDs);
-
-        System.out.print("Done Scanning!");
     }
     public static Scanner scanLinesRetryable() {
         try {

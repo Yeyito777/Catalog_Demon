@@ -12,9 +12,7 @@ import java.awt.print.Printable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Connection {
     public static List<Connection> connections = new ArrayList<>();
@@ -38,6 +36,7 @@ public class Connection {
     String host;
     String gateway;
     int netInterface;
+    boolean destroyOnDisconnect = false;
     public boolean active = false;
 
     public enum TYPE {
@@ -55,6 +54,11 @@ public class Connection {
             this.gateway = data[1];
             this.netInterface = Integer.parseInt(data[2]);
         }
+        if (type == TYPE.PROXY) {
+            if (data != null && data[0].equals("true")) {
+                this.destroyOnDisconnect = true;
+            }
+        }
     }
     public void connect() {
         // Disconnect from all connections
@@ -62,7 +66,6 @@ public class Connection {
         // Connect
         if (this.connectionType == TYPE.DIRECT) {RouteManager.addRoute(this.host,this.gateway,this.netInterface);}
         this.active = true;
-        System.out.print("|");
     }
     public void connect(VirtualBrowser browser) {
         // Disconnect from all connections
@@ -74,7 +77,6 @@ public class Connection {
             browser.setProxy(new Proxy(Proxy.Type.SOCKS, new InetSocketAddress("127.0.0.1", TORinterface.MAIN_PORT)));
         }
         this.active = true;
-        System.out.print("|");
     }
 
     public void disconnect() {
@@ -88,6 +90,10 @@ public class Connection {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+
+        if (this.destroyOnDisconnect) {
+            connections.remove(this);
         }
     }
 
