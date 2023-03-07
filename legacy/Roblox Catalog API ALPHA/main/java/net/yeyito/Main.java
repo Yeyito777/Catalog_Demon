@@ -1,15 +1,16 @@
 package net.yeyito;
 
 import net.dv8tion.jda.api.entities.Activity;
-import net.yeyito.connections.*;
-import net.yeyito.roblox.CatalogScanner;
+import net.yeyito.connections.DiscordBot;
+import net.yeyito.connections.LimitedTXTUpdater;
+import net.yeyito.connections.RouteManager;
+import net.yeyito.connections.VPNinterface;
 import net.yeyito.roblox.LimitedPriceTracker;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Proxy;
 import java.util.Scanner;
 
 public class Main {
@@ -18,7 +19,6 @@ public class Main {
     public static boolean PRINT_CMD_ERRORS = false;
 
     public static void main(String[] args) {
-        TORinterface.openTOR();
         listenForExitCommand();
 
         System.out.println("Waiting for registered channel");
@@ -30,6 +30,7 @@ public class Main {
         while (true) {
             LimitedTXTUpdater.updateLimitedsTXT();
             LimitedPriceTracker.updatePrices();
+            threadSleep(50000); // Sleep in order to not get too many requests!
         }
     }
     public static int getDefaultRetryTime() {
@@ -83,8 +84,6 @@ public class Main {
                         throw new RuntimeException(e);
                     }
 
-                    TORinterface.exitTOR();
-                    CatalogScanner.CatalogSummary.summarize();
                     System.exit(0);
                     break;
                 }

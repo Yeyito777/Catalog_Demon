@@ -1,41 +1,25 @@
 package net.yeyito.roblox;
 
 import net.yeyito.Main;
-import net.yeyito.util.Connection;
 import net.yeyito.util.StringFilter;
 import net.yeyito.VirtualBrowser;
+import net.yeyito.connections.RouteManager;
 import net.yeyito.util.JSON;
 
 import java.io.*;
-import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 public class CatalogScanner {
     static VirtualBrowser virtualBrowser = new VirtualBrowser();
     static String XCSRF_token = "";
-    static int requestsInConnection = 0;
-    public static class CatalogSummary {
-        static Date startTime;
-        static long startTimeNanos;
-        static Date endTime;
-        static long itemsScanned = 0;
-
-        public static void init() {
-            startTime = Date.from(Instant.now());
-            startTimeNanos = System.nanoTime();
-        }
-        public static void summarize() {
-            endTime = Date.from(Instant.now());
-            System.out.print("\n\u001B[34m" + "CATALOG SCANNER SUMMARY:\n" + "Start Time: " + startTime + "\n End Time: " + endTime + "\n Items Scanned: " + itemsScanned +
-                    "\n Items Scanned Per Second: " + itemsScanned/((System.nanoTime()-startTimeNanos)/1e+9) + "\u001B[0m");
-        }
-
-        public static void count(int number) {
-            itemsScanned = itemsScanned+number;
-        }
-    }
+    static int requests_in_route = 0;
     public static void itemBulkToPrice(List<Long> IDs) {
-        System.out.print("\nScanning"); CatalogSummary.init();
+        System.out.print("\nScanning");
+        RouteManager.deleteRoute("catalog.roblox.com");
+        XCSRF_token = getXCSRF_Token();
 
         if (IDs.size() <= 120) {
             LimitedPriceTracker.limitedToInfoMerge(itemBulkToPriceRequest(IDs));
@@ -50,20 +34,22 @@ public class CatalogScanner {
                 listOfIDsLists.add(listOfIDs);
             }
 
-            for (List<Long> IDs120 : listOfIDsLists) {
-                if (requestsInConnection == 0 || requestsInConnection == 10) {
-                    Connection connection = Connection.getNextConnection();
-                    connection.connect(virtualBrowser);
-                    requestsInConnection = 0;
-                }
+            for (List<Long> IDs120: listOfIDsLists) {
                 LimitedPriceTracker.limitedToInfoMerge(itemBulkToPriceRequest(IDs120));
-                requestsInConnection++; CatalogSummary.count(120);
             }
         }
+        requests_in_route = 0; // Reset
     }
 
     public static HashMap<Long,List<Object>> itemBulkToPriceRequest(List<Long> IDs) {
-        if (requestsInConnection == 0) {XCSRF_token = getXCSRF_Token(); for (Connection c : Connection.connections) {if (c.active && c.getConnectionTYPE() != Connection.TYPE.NONE) {Main.threadSleep((int) (Main.getDefaultRetryTime()));}}}
+        if (requests_in_route >= 10) {
+            requests_in_route = 0;
+            RouteManager.deleteRoute("catalog.roblox.com");
+            RouteManager.addRoute("catalog.roblox.com", "192.168.0.1", 8);
+            XCSRF_token = getXCSRF_Token(); // regenerate cookies
+            Main.threadSleep(Main.getDefaultRetryTime()); // Wait so Token Validation doesn't Fail
+        }
+
         try {
             StringBuilder payload = new StringBuilder();
             payload.append("{\"items\":[");
@@ -91,17 +77,11 @@ public class CatalogScanner {
                     "  -H 'user-agent: "+ userAgents[new Random().nextInt(0,userAgents.length)] +"' \\\n" +
                     "  --data-raw '" + payload + "' \\\n" +
                     "  --compressed", "  -H 'x-csrf-token: " + XCSRF_token + "' \\\n");
+            requests_in_route++;
             System.out.print(".");
             return JSON.itemBatchStringToHashMap(itemsResponse.get("response").toString());
         } catch (IOException e) {
-            if (e.getMessage().contains("Server returned HTTP response code: 429")) {
-                Connection connection = Connection.getNextConnection();
-                connection.connect(virtualBrowser);
-                XCSRF_token = getXCSRF_Token();
-                requestsInConnection = 0;
-                return itemBulkToPriceRequest(IDs);
-            }
-            Main.discordBot.sendMessageOnRegisteredChannel("all-item-price-changes",e.getMessage() + " error when route hasn't gotten 10 successful requests, retrying in " + Main.getDefaultRetryTime() + " millis! And reloading cookies.",0);
+            Main.discordBot.sendMessageOnRegisteredChannel("all-item-price-changes",e.toString() + " error when route hasn't gotten 10 successful requests, retrying in " + Main.getDefaultRetryTime() + " millis! And reloading cookies.",0);
             Main.threadSleep(Main.getDefaultRetryTime());
             XCSRF_token = getXCSRF_Token();
 
@@ -129,6 +109,7 @@ public class CatalogScanner {
         } catch (IOException e) {
             System.out.println("getXCSRF_Token Fail!");
             System.out.println(virtualBrowser.cookies);
+            virtualBrowser.printCURL = true;
 
             Main.discordBot.sendMessageOnRegisteredChannel("all-item-price-changes",e.toString() + " retrying after" + Main.getDefaultRetryTime() + " millis!",0);
             Main.threadSleep(Main.getDefaultRetryTime());
@@ -146,7 +127,7 @@ public class CatalogScanner {
         }
     }
 
-    static final String[] userAgents = new String[]{
+    @Deprecated static final String[] userAgents = new String[]{
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36",
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36",
             "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36",

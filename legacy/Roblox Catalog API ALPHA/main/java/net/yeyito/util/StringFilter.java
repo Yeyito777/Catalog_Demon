@@ -52,20 +52,7 @@ public class StringFilter {
         }
         return Long.parseLong(recentAveragePrice);
     }
-    public static String parseStringUsingRegex(String input, String regex,int group) {
-        if (input == null) {
-            return null;
-        }
 
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(input);
-
-        if (matcher.find()) {
-            return matcher.group(group);
-        } else {
-            return null;
-        }
-    }
     public static String parseStringUsingRegex(String input, String regex) {
         if (input == null) {
             return null;

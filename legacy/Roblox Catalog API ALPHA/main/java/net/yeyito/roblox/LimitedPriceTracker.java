@@ -30,6 +30,7 @@ public class LimitedPriceTracker {
         }
         scanner.close();
         CatalogScanner.itemBulkToPrice(itemIDs);
+        RouteManager.deleteRoute("catalog.roblox.com"); // Just in case
 
         System.out.print("Done Scanning!");
     }

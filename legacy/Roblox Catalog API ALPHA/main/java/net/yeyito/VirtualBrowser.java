@@ -5,7 +5,6 @@ import net.yeyito.util.StringFilter;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.Proxy;
 import java.net.URL;
 import java.util.*;
 import java.util.zip.DeflaterInputStream;
@@ -16,12 +15,9 @@ public class VirtualBrowser {
     public List<String> cookies = new ArrayList<>();
     public boolean printCURL = false;
     public boolean logCookiesCURL = true;
-    private Proxy proxy = null;
     public HashMap<String,Object> openWebsite(String site, String requestMethod,@Nullable HashMap<String,String> requestHeaders, @Nullable String[] requestCookies, @Nullable String payload, boolean logCookies, boolean print) throws IOException {
         // Opening Connection
-        HttpURLConnection connection;
-        if (proxy == null) {connection = (HttpURLConnection) new URL(site).openConnection();}
-        else {connection = (HttpURLConnection) new URL(site).openConnection(proxy);}
+        HttpURLConnection connection = (HttpURLConnection) new URL(site).openConnection();
         // Setting Request Method
         connection.setRequestMethod(requestMethod);
         // Adding Headers
@@ -222,10 +218,6 @@ public class VirtualBrowser {
         }
         if (add != null) {headers.putAll(add);}
         return headers;
-    }
-
-    public void setProxy(@Nullable Proxy proxy) {
-        this.proxy = proxy;
     }
 
     @Deprecated public HashMap<String,String> getHeadersPreset(String preset) {
