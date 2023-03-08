@@ -15,6 +15,7 @@ import java.util.*;
 public class LimitedPriceTracker {
     public static HashMap<Long,List<Object>> LimitedToInfo = new HashMap<>();
     //List<Object> = String name, Long Price, Long RAP, Long Original_Price, Long Quantity_Sold, List<Long Price,Long Os.Time> Data Points
+    static int index = 0;
 
     public static void updatePrices() {
         shuffleLinesRetryable();
@@ -30,6 +31,9 @@ public class LimitedPriceTracker {
         }
         scanner.close();
         CatalogScanner.itemBulkToPrice(itemIDs);
+
+        if (index % 7 == 0 && index != 0) {System.out.print("\n");}
+        index++;
     }
     public static Scanner scanLinesRetryable() {
         try {

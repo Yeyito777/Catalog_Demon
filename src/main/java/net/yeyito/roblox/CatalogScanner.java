@@ -10,11 +10,11 @@ import java.io.*;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Logger;
 
 public class CatalogScanner {
     static VirtualBrowser virtualBrowser = new VirtualBrowser();
     static String XCSRF_token = "";
-    static int requestsInConnection = 0;
     static boolean initComplete = false;
     public static class CatalogSummary {
         static int index = 0;
@@ -57,7 +57,7 @@ public class CatalogScanner {
         if (!initComplete) {CatalogSummary.init(); virtualBrowser.muteErrors(); initComplete = true;}
 
         if (IDs.size() <= 120) {
-            LimitedPriceTracker.limitedToInfoMerge(Objects.requireNonNull(itemBulkToPriceRequest(IDs, getXCSRF_Token(),null)));
+            LimitedPriceTracker.limitedToInfoMerge(Objects.requireNonNull(itemBulkToPriceRequest(IDs, getXCSRF_Token(virtualBrowser),null,virtualBrowser)));
         } else {
             int requestNumber = (IDs.size() + 119) / 120;
             List<List<Long>> listOfIDsLists = new ArrayList<>();
@@ -69,25 +69,29 @@ public class CatalogScanner {
                 listOfIDsLists.add(listOfIDs);
             }
 
-            Connection connection = null;
-            for (List<Long> IDs120 : listOfIDsLists) {
-                if (requestsInConnection == 0 || requestsInConnection == 10) {
-                    connection = new Connection(Connection.TYPE.PROXY,new String[]{"true"});
-                    connection.connect(virtualBrowser);
-                    requestsInConnection = 0;
+            CompletableFuture<Void> async = CompletableFuture.runAsync(() -> {
+                int listNumber = 1;
+                while (listNumber < 3) {
+                    VirtualBrowser v2 = virtualBrowser;
+                    Connection connection = new Connection(Connection.TYPE.PROXY,new String[]{"true"});
+                    connection.connect(v2);
+                    String token = getXCSRF_Token(v2);
+                    Main.threadSleep(Main.getDefaultRetryTime());
+
+                    for (int i = 0; i < 10; i++) {
+                        int finalI = i*listNumber;
+                        CompletableFuture.runAsync(() -> {LimitedPriceTracker.limitedToInfoMerge(Objects.requireNonNull(itemBulkToPriceRequest(listOfIDsLists.get(finalI), token, connection,v2)));});
+                        Main.threadSleep(500);
+                    }
+                    connection.disconnect();
+                    listNumber++;
                 }
-
-                if (requestsInConnection == 0) {XCSRF_token = getXCSRF_Token(); for (Connection c : Connection.connections) {if (c.active && c.getConnectionTYPE() != Connection.TYPE.NONE) {Main.threadSleep((int) (Main.getDefaultRetryTime()));}}}
-                Connection finalConnection = connection;
-                CompletableFuture.runAsync(() -> {LimitedPriceTracker.limitedToInfoMerge(Objects.requireNonNull(itemBulkToPriceRequest(IDs120, XCSRF_token, finalConnection)));});
-
-                requestsInConnection++;
-                Main.threadSleep(500);
-            }
+            });
+            async.join();
         }
     }
 
-    public static HashMap<Long,List<Object>> itemBulkToPriceRequest(List<Long> IDs,String token,Connection connection) {
+    public static HashMap<Long,List<Object>> itemBulkToPriceRequest(List<Long> IDs,String token,Connection connection,VirtualBrowser browser) {
         try {
             StringBuilder payload = new StringBuilder();
             payload.append("{\"items\":[");
@@ -99,7 +103,7 @@ public class CatalogScanner {
             }
             payload.append("]}");
 
-            HashMap<String, Object> itemsResponse = virtualBrowser.curlToOpenWebsite("curl 'https://catalog.roblox.com/v1/catalog/items/details' \\\n" +
+            HashMap<String, Object> itemsResponse = browser.curlToOpenWebsite("curl 'https://catalog.roblox.com/v1/catalog/items/details' \\\n" +
                     "  -H 'authority: catalog.roblox.com' \\\n" +
                     "  -H 'accept: application/json, text/plain, */*' \\\n" +
                     "  -H 'accept-language: en-US,en;q=0.9' \\\n" +
@@ -123,9 +127,9 @@ public class CatalogScanner {
         }
     }
 
-    public static String getXCSRF_Token() {
+    public static String getXCSRF_Token(VirtualBrowser browser) {
         try {
-            HashMap<String, Object> tokenRequest = virtualBrowser.curlToOpenWebsite("curl 'https://www.roblox.com/catalog?Category=1&salesTypeFilter=2' \\\n" +
+            HashMap<String, Object> tokenRequest = browser.curlToOpenWebsite("curl 'https://www.roblox.com/catalog?Category=1&salesTypeFilter=2' \\\n" +
                     "  -H 'authority: www.roblox.com' \\\n" +
                     "  -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7' \\\n" +
                     "  -H 'accept-language: en-US,en;q=0.9' \\\n" +
@@ -142,11 +146,12 @@ public class CatalogScanner {
             return StringFilter.parseStringUsingRegex((String) tokenRequest.get("response"), "csrf-token\" data-token=\"(.*?)\""); // Remember it also saves cookies!
         } catch (IOException e) {
             System.out.println("getXCSRF_Token Fail!");
-            System.out.println(virtualBrowser.cookies);
+            e.printStackTrace();
+            System.out.println(browser.cookies);
 
             Main.discordBot.sendMessageOnRegisteredChannel("all-item-price-changes",e.toString() + " retrying after" + Main.getDefaultRetryTime() + " millis!",0);
             Main.threadSleep(Main.getDefaultRetryTime());
-            return getXCSRF_Token();
+            return getXCSRF_Token(browser);
         }
     }
     public static List<Object> itemToInfo(long ID) {

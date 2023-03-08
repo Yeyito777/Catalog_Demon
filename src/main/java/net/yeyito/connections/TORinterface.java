@@ -7,7 +7,10 @@ import net.yeyito.util.StringFilter;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
 
 public class TORinterface {
     //* Love the Onion *//
