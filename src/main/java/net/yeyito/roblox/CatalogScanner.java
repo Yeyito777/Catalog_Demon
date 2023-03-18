@@ -1,6 +1,7 @@
 package net.yeyito.roblox;
 
 import net.yeyito.Main;
+import net.yeyito.connections.TOR;
 import net.yeyito.util.Connection;
 import net.yeyito.util.StringFilter;
 import net.yeyito.VirtualBrowser;
@@ -87,7 +88,6 @@ public class CatalogScanner {
                     listNumber++;
                 }
             });
-            async.join();
         }
     }
 
@@ -122,6 +122,7 @@ public class CatalogScanner {
             CatalogSummary.count(120,connection);
             return JSON.itemBatchStringToHashMap(itemsResponse.get("response").toString());
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.print("*");
             return null;
         }
