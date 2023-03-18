@@ -18,7 +18,7 @@ public class Main {
     public static boolean PRINT_CMD_ERRORS = false;
 
     public static void main(String[] args) {
-        TORinterface.openTOR();
+        new TORinterface();
         listenForExitCommand();
 
         System.out.println("Waiting for registered channel");
@@ -83,7 +83,10 @@ public class Main {
                         throw new RuntimeException(e);
                     }
 
-                    TORinterface.exitTOR();
+                    for (TORinterface T: TORinterface.TORinstances) {
+                        T.exitTOR();
+                    }
+
                     CatalogScanner.CatalogSummary.summarize();
                     System.exit(0);
                     break;

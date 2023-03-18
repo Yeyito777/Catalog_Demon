@@ -46,6 +46,7 @@ public class Connection {
     }
 
     private VirtualBrowser assignedBrowser = null;
+    public TORinterface torInstance = null;
     public Connection(Connection.TYPE type, String[] data) {
         this.connectionType = type;
         connections.add(this);
@@ -74,7 +75,8 @@ public class Connection {
         if (this.connectionType == TYPE.DIRECT) {RouteManager.addRoute(this.host,this.gateway,this.netInterface);}
         else if (this.connectionType == TYPE.PROXY) {
             this.assignedBrowser = browser;
-            browser.setProxy(new Proxy(Proxy.Type.SOCKS, new InetSocketAddress("127.0.0.1", TORinterface.MAIN_PORT)));
+            this.torInstance = TORinterface.getAvailableInstance(); this.torInstance.markUnavailable();
+            browser.setProxy(new Proxy(Proxy.Type.SOCKS, new InetSocketAddress("127.0.0.1", torInstance.MAIN_PORT)));
         }
         this.active = true;
     }
@@ -86,7 +88,7 @@ public class Connection {
         else if (this.connectionType == TYPE.PROXY) {
             this.assignedBrowser.setProxy(null);
             try {
-                TORinterface.changeCircuit();
+                this.torInstance.changeCircuit(); this.torInstance.markAvailable();
             } catch (IOException e) {
                 e.printStackTrace();
             }

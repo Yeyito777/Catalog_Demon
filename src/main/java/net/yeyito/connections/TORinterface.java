@@ -1,26 +1,51 @@
 package net.yeyito.connections;
 
 import net.yeyito.Main;
-import net.yeyito.VirtualBrowser;
-import net.yeyito.util.Connection;
 import net.yeyito.util.StringFilter;
 
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashMap;
 import java.util.List;
 
 public class TORinterface {
     //* Love the Onion *//
-    public static Process TOR;
-    public static int MAIN_PORT;
-    public static int CONTROL_PORT;
+    public static List<TORinterface> TORinstances = new ArrayList<>();
     public static final String TOR_PASSWORD = "yeyito";
-    public static void openTOR() {
+    public Process TOR;
+    public int MAIN_PORT;
+    public int CONTROL_PORT;
+    private final String path;
+
+    public boolean available = true;
+    public static TORinterface getAvailableInstance() {
+        for (TORinterface T: TORinstances) {
+            if (T.available) {
+                return T;
+            }
+        }
+        throw new RuntimeException("No available TOR instance");
+    }
+    public void markUnavailable() {
+        available = false;
+    }
+
+    public void markAvailable() {
+        available = true;
+    }
+    public TORinterface(String torPath) {
+        this.path = torPath;
+        TORinstances.add(this);
+        openTOR();
+    }
+    public TORinterface() {
+        this.path = "C:/Users/aline/OneDrive/Desktop/Tor Browser/Browser/TorBrowser/Tor/tor.exe";
+        TORinstances.add(this);
+        openTOR();
+    }
+    public void openTOR() {
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder("C:/Users/aline/OneDrive/Desktop/Tor Browser/Browser/TorBrowser/Tor/tor.exe");
+            ProcessBuilder processBuilder = new ProcessBuilder(this.path);
             Process torProcess = processBuilder.start();
             TOR = torProcess;
             InputStream inputStream = torProcess.getInputStream();
@@ -44,7 +69,7 @@ public class TORinterface {
         }
     }
 
-    public static void changeCircuit() throws IOException {
+    public void changeCircuit() throws IOException {
         // open a connection to the Tor control port
         Socket socket = new Socket("127.0.0.1", 9151);
         OutputStream outputStream = socket.getOutputStream();
@@ -71,7 +96,7 @@ public class TORinterface {
         socket.close();
     }
 
-    public static void exitTOR() {
+    public void exitTOR() {
         TOR.destroy(); // Exit TOR
     }
 }
