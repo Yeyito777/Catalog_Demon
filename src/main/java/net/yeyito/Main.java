@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Proxy;
 import java.util.Scanner;
 
 public class Main {
@@ -17,7 +18,7 @@ public class Main {
     public static boolean PRINT_CMD_ERRORS = false;
 
     public static void main(String[] args) {
-        new TOR(9050,9051);
+        new TORinterface();
         listenForExitCommand();
 
         System.out.println("Waiting for registered channel");
@@ -82,7 +83,10 @@ public class Main {
                         throw new RuntimeException(e);
                     }
 
-                    for (TOR T: TOR.TORinstances) {T.exitTOR();}
+                    for (TORinterface T: TORinterface.TORinstances) {
+                        T.exitTOR();
+                    }
+
                     CatalogScanner.CatalogSummary.summarize();
                     System.exit(0);
                     break;

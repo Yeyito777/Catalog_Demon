@@ -1,10 +1,14 @@
 package net.yeyito.util;
 
 
+import com.beust.jcommander.internal.Nullable;
+import net.yeyito.Main;
 import net.yeyito.VirtualBrowser;
 import net.yeyito.connections.RouteManager;
-import net.yeyito.connections.TOR;
+import net.yeyito.connections.TORinterface;
+import net.yeyito.connections.VPNinterface;
 
+import java.awt.print.Printable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -42,7 +46,7 @@ public class Connection {
     }
 
     private VirtualBrowser assignedBrowser = null;
-    public TOR torInstance = null;
+    public TORinterface torInstance = null;
     public Connection(Connection.TYPE type, String[] data) {
         this.connectionType = type;
         connections.add(this);
@@ -71,9 +75,7 @@ public class Connection {
         if (this.connectionType == TYPE.DIRECT) {RouteManager.addRoute(this.host,this.gateway,this.netInterface);}
         else if (this.connectionType == TYPE.PROXY) {
             this.assignedBrowser = browser;
-            this.torInstance = TOR.getAvailableInstance(10);
-            assert this.torInstance != null; // Can assert since previous line waits for an available instance because of method.
-            this.torInstance.markUnavailable();
+            this.torInstance = TORinterface.getAvailableInstance(); this.torInstance.markUnavailable();
             browser.setProxy(new Proxy(Proxy.Type.SOCKS, new InetSocketAddress("127.0.0.1", torInstance.MAIN_PORT)));
         }
         this.active = true;
