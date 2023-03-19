@@ -4,12 +4,14 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.yeyito.connections.*;
 import net.yeyito.roblox.CatalogScanner;
 import net.yeyito.roblox.LimitedPriceTracker;
+import net.yeyito.util.TextFile;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Proxy;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.util.Scanner;
 
 public class Main {
@@ -18,8 +20,10 @@ public class Main {
     public static boolean PRINT_CMD_ERRORS = false;
 
     public static void main(String[] args) {
-        new TORinterface();
         listenForExitCommand();
+
+        new TextFile("src/main/resources/StackTrace.txt").deleteAllText();
+        TOR.generateInstances(1);
 
         System.out.println("Waiting for registered channel");
         while (discordBot.registeredTextChannels.isEmpty()) {
@@ -27,10 +31,8 @@ public class Main {
         }
         System.out.println("Channel registered.");
 
-        while (true) {
-            LimitedTXTUpdater.updateLimitedsTXT();
-            LimitedPriceTracker.updatePrices();
-        }
+        LimitedPriceTracker.updateIDs();
+        CatalogScanner.scanLimiteds();
     }
     public static int getDefaultRetryTime() {
         return 5000;
@@ -83,10 +85,7 @@ public class Main {
                         throw new RuntimeException(e);
                     }
 
-                    for (TORinterface T: TORinterface.TORinstances) {
-                        T.exitTOR();
-                    }
-
+                    for (TOR T: TOR.TORinstances) {T.exitTOR();}
                     CatalogScanner.CatalogSummary.summarize();
                     System.exit(0);
                     break;

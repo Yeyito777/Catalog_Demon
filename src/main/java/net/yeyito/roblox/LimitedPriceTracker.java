@@ -1,39 +1,79 @@
 package net.yeyito.roblox;
 
 import net.yeyito.Main;
+import net.yeyito.VirtualBrowser;
+import net.yeyito.util.JSON;
 import net.yeyito.util.TextFile;
 import net.yeyito.connections.DiscordBot;
-import net.yeyito.connections.RouteManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 // Class tracks the price of all limiteds
 public class LimitedPriceTracker {
     public static HashMap<Long,List<Object>> LimitedToInfo = new HashMap<>();
     //List<Object> = String name, Long Price, Long RAP, Long Original_Price, Long Quantity_Sold, List<Long Price,Long Os.Time> Data Points
-    static int index = 0;
 
-    public static void updatePrices() {
-        shuffleLinesRetryable();
+    public static List<Long> getIDs() {
         Scanner scanner = scanLinesRetryable();
         List<Long> itemIDs = new ArrayList<Long>();
 
-        int currentLine = 0;
-        int maxLine = 2400;
-        while (scanner.hasNextLine() && currentLine < maxLine) {
+        while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             itemIDs.add(Long.parseLong(line));
-            currentLine++;
         }
         scanner.close();
-        CatalogScanner.itemBulkToPrice(itemIDs);
+        updateIDs();
+        return itemIDs;
+    }
 
-        if (index % 7 == 0 && index != 0) {System.out.print("\n");}
-        index++;
+    public static List<List<Long>> chunkIDs(List<Long> IDs) {
+        int requestNumber = (IDs.size() + 119) / 120;
+        List<List<Long>> listOfIDsLists = new ArrayList<>();
+
+        for (int i = 0; i < requestNumber; i++) {
+            int fromIndex = i * 120;
+            int toIndex = Math.min(fromIndex + 120, IDs.size());
+            List<Long> listOfIDs = IDs.subList(fromIndex, toIndex);
+            listOfIDsLists.add(listOfIDs);
+        }
+        for (int i = 0; i < listOfIDsLists.size(); i++) {
+            List<Long> listOfIDs120 = listOfIDsLists.get(i);
+            if (listOfIDs120.size() < 120) {
+                int itemsToAdd = 120 - listOfIDs120.size();
+                List<Long> newListOfIDs120 = new ArrayList<>(listOfIDs120);
+                for (int j = 0; j < itemsToAdd; j++) {
+                    newListOfIDs120.add(listOfIDsLists.get(1).get(j));
+                }
+                listOfIDsLists.set(i, newListOfIDs120);
+            }
+        }
+        return listOfIDsLists;
+    }
+
+    private static final VirtualBrowser virtualBrowser = new VirtualBrowser();
+    public static void updateIDs() {
+        CompletableFuture.runAsync(() -> {
+            try {
+                HashMap<String, Object> args = virtualBrowser.openWebsite("https://rblx.trade/api/v1/catalog/all", "GET", null, null, null, false, false);
+                TextFile limitedsTXT = new TextFile("src/main/resources/Limiteds.txt");
+                List<String> IDs = JSON.getItemIdsFromRolimonAPI(args.get("response").toString());
+
+                for (String id : IDs) {
+                    if (id != null && !limitedsTXT.findString(id)) {
+                        limitedsTXT.writeString(id + "\n");
+                        System.out.println("Added new limited id: " + id);
+                    }
+                }
+
+            } catch (IOException e) {
+                Main.discordBot.sendMessageOnRegisteredChannel("all-item-sales", "Could not update limiteds.txt error: " + e.toString() + " will retry on next loop.", 0);
+            }
+        });
     }
     public static Scanner scanLinesRetryable() {
         try {
@@ -64,7 +104,7 @@ public class LimitedPriceTracker {
                     String price_difference_string;
                     String ping_role = "";
 
-                    if (newLimitedToInfo.get(key).get(1) == null || LimitedToInfo.get(key).get(1) == null) {sign = "??";}
+                    if (newLimitedToInfo.get(key).get(1) == null || LimitedToInfo.get(key).get(1) == null) {new TextFile("src/main/resources/StackTrace.txt").writeString("Item price is null, ignoring!"); return;}
                     else if ((Long) newLimitedToInfo.get(key).get(1) >= (Long) LimitedToInfo.get(key).get(1)) {sign = "+"; price_difference_percentage = (double) Math.abs((Long) LimitedToInfo.get(key).get(1) - (Long) newLimitedToInfo.get(key).get(1)) / (Long) LimitedToInfo.get(key).get(1);}
                     else if ((Long) newLimitedToInfo.get(key).get(1) < (Long) LimitedToInfo.get(key).get(1)) {sign = "-"; price_difference_percentage = (double) Math.abs((Long) LimitedToInfo.get(key).get(1) - (Long) newLimitedToInfo.get(key).get(1)) / (Long) LimitedToInfo.get(key).get(1);}
                     price_difference_percentage = price_difference_percentage*100;

@@ -1,10 +1,13 @@
 package net.yeyito;
 
 import com.beust.jcommander.internal.Nullable;
+import net.yeyito.connections.TOR;
 import net.yeyito.util.StringFilter;
+import net.yeyito.util.TextFile;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
 import java.util.*;
@@ -12,12 +15,10 @@ import java.util.zip.DeflaterInputStream;
 import java.util.zip.GZIPInputStream;
 
 public class VirtualBrowser {
-    static String user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36";
     public List<String> cookies = new ArrayList<>();
     public boolean printCURL = false;
     public boolean logCookiesCURL = true;
-    private Proxy proxy = null;
-
+    volatile public Proxy proxy = null;
     private boolean muted = false;
     public void muteErrors() {this.muted = true;}
     public void unmuteErrors() {this.muted = false;}
@@ -80,7 +81,7 @@ public class VirtualBrowser {
             }
         }
         // Getting Possible Errors
-        if (connection.getErrorStream() != null && !muted) {
+        if (connection.getErrorStream() != null) {
             InputStream response = connection.getErrorStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(response));
             String line;
@@ -90,7 +91,11 @@ public class VirtualBrowser {
             }
             reader.close();
             response.close();
-            System.out.println(content);
+            if (!muted) {
+                System.out.println(content);
+            } else {
+                new TextFile("src/main/resources/StackTrace.txt").writeString("VIRTUAL BROWSER: Problem opening " + site + " connetion.getErrorStream() = " + content);
+            }
         }
 
         // Getting Response
@@ -242,7 +247,7 @@ public class VirtualBrowser {
             headers.put("sec-fetch-site","none");
             headers.put("sec-fetch-user","?1");
             headers.put("upgrade-insecure-requests","1");
-            headers.put("user-agent",user_agent);
+            headers.put("user-agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36");
         }
         if (Objects.equals(preset,"roblox-POST")) {
             headers.put("accept","*/*");
@@ -256,7 +261,7 @@ public class VirtualBrowser {
             headers.put("sec-fetch-dest","empty");
             headers.put("sec-fetch-mode","cors");
             headers.put("sec-fetch-site","same-origin");
-            headers.put("user-agent",user_agent);
+            headers.put("user-agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36");
         }
         return headers;
     }

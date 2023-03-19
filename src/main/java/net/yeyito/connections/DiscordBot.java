@@ -23,9 +23,9 @@ public class DiscordBot extends ListenerAdapter {
     JDA jda;
     Commands commands = new Commands();
     public List<TextChannel> registeredTextChannels = new ArrayList<TextChannel>();
-    public static final String High_Role = "<@&1072600598421192784>";
-    public static final String Extreme_Role = "<@&1072599152229371955>";
-    public static final String Ludicrous_Role = "<@&1072599265823698964>";
+    public static final String High_Role = "<@&1086796391361298472>";
+    public static final String Extreme_Role = "<@&1086796484596469880>";
+    public static final String Ludicrous_Role = "<@&1086796519048482996>";
     public DiscordBot(String token, @Nullable Activity activity) {
         this.jda = JDABuilder.createDefault(token).setActivity(activity)
                 .setEventPassthrough(true)

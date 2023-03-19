@@ -1,0 +1,56 @@
+
+Mar 19 18:13:25.209 [notice] Tor 0.4.7.13 (git-7c1601fb6edd780f) running on Windows 8 [or later] with Libevent 2.1.12-stable, OpenSSL 1.1.1t, Zlib 1.2.13, Liblzma N/A, Libzstd N/A and Unknown N/A as libc.
+Mar 19 18:13:25.209 [notice] Tor can't help you if you use it wrong! Learn how to be safe at https://support.torproject.org/faq/staying-anonymous/
+Mar 19 18:13:25.219 [notice] Read configuration file "C:\Users\aline\AppData\Roaming\tor\torrc".
+Mar 19 18:13:25.219 [warn] Path for ClientOnionAuthDir (C:/Users/aline/OneDrive/Desktop/Tor Browser/Directories/Data9051/Tor/onion-auth) is relative and will resolve to C:\Users\aline\OneDrive\Desktop\Tor Browser\Directories\Data9051\Tor\onion-auth. Is this what you wanted?
+Mar 19 18:13:25.219 [warn] Path for DataDirectory (C:/Users/aline/OneDrive/Desktop/Tor Browser/Directories/Data9051) is relative and will resolve to C:\Users\aline\OneDrive\Desktop\Tor Browser\Directories\Data9051. Is this what you wanted?
+Mar 19 18:13:25.219 [warn] Path for GeoIPFile (<default>) is relative and will resolve to C:\Users\aline\OneDrive\Desktop\Roblox Catalog API\<default>. Is this what you wanted?
+Mar 19 18:13:25.219 [warn] Path for GeoIPv6File (<default>) is relative and will resolve to C:\Users\aline\OneDrive\Desktop\Roblox Catalog API\<default>. Is this what you wanted?
+Mar 19 18:13:25.219 [warn] ControlPort is open, but no authentication method has been configured.  This means that any program on your computer can reconfigure your Tor.  That's bad!  You should upgrade your Tor controller as soon as possible.
+Mar 19 18:13:25.221 [notice] Opening Socks listener on 127.0.0.1:9050
+Mar 19 18:13:25.221 [notice] Opened Socks listener connection (ready) on 127.0.0.1:9050
+Mar 19 18:13:25.221 [notice] Opening Control listener on 127.0.0.1:9051
+Mar 19 18:13:25.221 [notice] Opened Control listener connection (ready) on 127.0.0.1:9051
+Mar 19 18:13:25.000 [notice] Bootstrapped 0% (starting): Starting
+Mar 19 18:13:26.000 [notice] Starting with guard context "default"
+Mar 19 18:13:27.000 [notice] Bootstrapped 5% (conn): Connecting to a relay
+Mar 19 18:13:27.000 [notice] Bootstrapped 10% (conn_done): Connected to a relay
+Mar 19 18:13:27.000 [notice] Bootstrapped 14% (handshake): Handshaking with a relay
+Mar 19 18:13:28.000 [notice] Bootstrapped 15% (handshake_done): Handshake with a relay done
+Mar 19 18:13:28.000 [notice] Bootstrapped 75% (enough_dirinfo): Loaded enough directory info to build circuits
+Mar 19 18:13:28.000 [notice] Bootstrapped 90% (ap_handshake_done): Handshake finished with a relay to build circuits
+Mar 19 18:13:28.000 [notice] Bootstrapped 95% (circuit_create): Establishing a Tor circuit
+Mar 19 18:13:28.000 [notice] Bootstrapped 100% (done): DoneTOR INFO: 
+MAIN PORT: 9050
+CONTROL PORT: 9051
+Using ip: 192.42.116.214
+..........
+Using ip: 185.220.101.140
+..........
+Using ip: 192.42.116.174
+..........
+Using ip: 185.220.103.4
+..........
+Using ip: 192.42.116.175
+
+Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+*.
+Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+*
+Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+*
+Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+*
+Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+*
+Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+*
+Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+*
+Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+*
+Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+*
+Using ip: 185.220.101.149
+..........
+removed 192.42.116.214 as it was last used 69.0958275
