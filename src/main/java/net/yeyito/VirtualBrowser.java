@@ -1,13 +1,10 @@
 package net.yeyito;
 
 import com.beust.jcommander.internal.Nullable;
-import net.yeyito.connections.TOR;
 import net.yeyito.util.StringFilter;
-import net.yeyito.util.TextFile;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
 import java.util.*;
@@ -93,8 +90,6 @@ public class VirtualBrowser {
             response.close();
             if (!muted) {
                 System.out.println(content);
-            } else {
-                new TextFile("src/main/resources/StackTrace.txt").writeString("VIRTUAL BROWSER: Problem opening " + site + " connetion.getErrorStream() = " + content);
             }
         }
 

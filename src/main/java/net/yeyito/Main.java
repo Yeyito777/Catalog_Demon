@@ -2,16 +2,16 @@ package net.yeyito;
 
 import net.dv8tion.jda.api.entities.Activity;
 import net.yeyito.connections.*;
+import net.yeyito.connections.tor.TorInstance;
+import net.yeyito.connections.tor.TorManager;
 import net.yeyito.roblox.CatalogScanner;
 import net.yeyito.roblox.LimitedPriceTracker;
-import net.yeyito.util.TextFile;
+import net.yeyito.roblox.RequestManager;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
 import java.util.Scanner;
 
 public class Main {
@@ -21,9 +21,7 @@ public class Main {
 
     public static void main(String[] args) {
         listenForExitCommand();
-
-        new TextFile("src/main/resources/StackTrace.txt").deleteAllText();
-        TOR.generateInstances(1);
+        TorManager.generateInstances(1,9050,9051);
 
         System.out.println("Waiting for registered channel");
         while (discordBot.registeredTextChannels.isEmpty()) {
@@ -31,12 +29,13 @@ public class Main {
         }
         System.out.println("Channel registered.");
 
-        LimitedPriceTracker.updateIDs();
-        CatalogScanner.scanLimiteds();
+        LimitedPriceTracker.updateLimitedsTXT();
+        RequestManager.handleRequests();
     }
     public static int getDefaultRetryTime() {
         return 5000;
     }
+
     public static void threadSleep(int timeMillis) {
         try {Thread.sleep(timeMillis);} catch (InterruptedException ie) {ie.printStackTrace(); System.out.println("Who the fuck is interrupting my threads?!");}
     }
@@ -49,8 +48,7 @@ public class Main {
             if (!line.contains("OK!")) {System.out.println(line);}
         }
         if (process.getErrorStream() != null && process.getErrorStream().available() > 0 && PRINT_CMD_ERRORS) {
-            System.out.println(process.getErrorStream().toString());
-            Main.discordBot.sendMessageOnRegisteredChannel("all-item-price-changes","Error with terminal: " + process.getErrorStream().toString(),0);
+            System.err.println(process.getErrorStream().toString());
         }
     }
 
@@ -65,8 +63,7 @@ public class Main {
             if (!line.contains("OK!")) {System.out.println(line);}
         }
         if (process.getErrorStream() != null && process.getErrorStream().available() > 0 && PRINT_CMD_ERRORS) {
-            System.out.println(process.getErrorStream().toString());
-            Main.discordBot.sendMessageOnRegisteredChannel("all-item-price-changes","Error with terminal: " + process.getErrorStream().toString(),0);
+            System.err.println(process.getErrorStream().toString());
         }
     }
 
@@ -85,7 +82,7 @@ public class Main {
                         throw new RuntimeException(e);
                     }
 
-                    for (TOR T: TOR.TORinstances) {T.exitTOR();}
+                    TorManager.exitInstances();
                     CatalogScanner.CatalogSummary.summarize();
                     System.exit(0);
                     break;

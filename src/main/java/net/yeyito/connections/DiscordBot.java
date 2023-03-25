@@ -42,8 +42,11 @@ public class DiscordBot extends ListenerAdapter {
             String command = arguments[0];
 
             switch (command) {
-                case ";register_channel" -> commands.register_channel(event,arguments);
-                case ";buy_item" -> commands.buy_item(event,arguments);
+                case ";register_channel" -> {
+                    if (event.getAuthor().getId().equals("310543961825738754")) {
+                        commands.register_channel(event, arguments);
+                    }
+                }
             }
         }
     }
@@ -54,14 +57,12 @@ public class DiscordBot extends ListenerAdapter {
         super.onGenericMessage(event);
     }
 
-    public void sendMessageOnRegisteredChannel(String channelName, String message,int maxSecondsBeforeQueue) {
+    public void sendMessageOnRegisteredChannels(String message,int maxSecondsBeforeQueue) {
         TimeUnit timeUnit = TimeUnit.SECONDS;
         if (maxSecondsBeforeQueue == 0) {timeUnit = TimeUnit.MICROSECONDS; maxSecondsBeforeQueue = 1;}
 
         for (TextChannel textChannel : registeredTextChannels) {
-            if (textChannel.getName().equals(channelName)) {
-                textChannel.sendMessage(message).queueAfter(new Random().nextInt(0, maxSecondsBeforeQueue), timeUnit);
-            }
+            textChannel.sendMessage(message).queueAfter(new Random().nextInt(0, maxSecondsBeforeQueue), timeUnit);
         }
     }
 }
@@ -72,22 +73,6 @@ class Commands {
         else {
             Main.discordBot.registeredTextChannels.add(event.getMessage().getChannel().asTextChannel());
             event.getMessage().getChannel().sendMessage(event.getMessage().getChannel().asTextChannel().getName() + " is now visible to Yeyito!").queue();
-        }
-    }
-    public void buy_item(MessageReceivedEvent event, String[] args) {
-        if (args.length > 2) {event.getChannel().sendMessage("Invalid syntax!").queue();}
-        else {
-            try {
-                long ID = Long.parseLong(args[1]);
-                if (!event.getAuthor().getId().equals("310543961825738754")) {
-                    event.getMessage().getChannel().sendMessage("Hiss!!! I only accept buy requests from my owner!! :3").queue();
-                } else {
-                    //ItemBuyer.buyItem(ID,event);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                event.getMessage().getChannel().sendMessage("Error: " + e.toString()).queue();
-            }
         }
     }
 }
