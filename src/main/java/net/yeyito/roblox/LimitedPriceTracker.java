@@ -1,8 +1,6 @@
 package net.yeyito.roblox;
 
 import net.yeyito.Main;
-import net.yeyito.VirtualBrowser;
-import net.yeyito.util.JSON;
 import net.yeyito.util.TextFile;
 import net.yeyito.connections.DiscordBot;
 
@@ -11,30 +9,36 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 
 // Class tracks the price of all limiteds
 public class LimitedPriceTracker {
     public static HashMap<Long,List<Object>> LimitedToInfo = new HashMap<>();
     //List<Object> = String name, Long Price, Long RAP, Long Original_Price, Long Quantity_Sold, List<Long Price,Long Os.Time> Data Points
+    static int index = 0;
 
-    public static List<Long> getAllLimitedsInTXT() {
+    public static void updatePrices() {
         shuffleLinesRetryable();
         Scanner scanner = scanLinesRetryable();
         List<Long> itemIDs = new ArrayList<Long>();
 
-        while (scanner.hasNextLine()) {
+        int currentLine = 0;
+        int maxLine = 2400;
+        while (scanner.hasNextLine() && currentLine < maxLine) {
             String line = scanner.nextLine();
             itemIDs.add(Long.parseLong(line));
+            currentLine++;
         }
         scanner.close();
-        return itemIDs;
+        CatalogScanner.itemBulkToPrice(itemIDs);
+
+        if (index % 7 == 0 && index != 0) {System.out.print("\n");}
+        index++;
     }
     public static Scanner scanLinesRetryable() {
         try {
             return new Scanner(new File("src/main/resources/Limiteds.txt"));
         } catch (FileNotFoundException e) {
-            System.err.println("could not scan the lines of src/main/resources/Limiteds.txt! retrying in " + Main.getDefaultRetryTime() + " millis!");
+            new TextFile("src/main/resources/Logs/StackTrace.txt").writeString("\ncould not scan the lines of src/main/resources/Limiteds.txt! error: "+ e.getMessage() + "\n");
             Main.threadSleep(Main.getDefaultRetryTime());
             return scanLinesRetryable();
         }
@@ -43,29 +47,11 @@ public class LimitedPriceTracker {
         try {
             new TextFile("src/main/resources/Limiteds.txt").shuffleLines();
         } catch (IOException e) {
-            System.err.println("could not shuffle the lines of src/main/resources/Limiteds.txt! retrying in " + Main.getDefaultRetryTime() + " millis!");
+            new TextFile("src/main/resources/Logs/StackTrace.txt").writeString("\ncould not shuffle the lines of src/main/resources/Limiteds.txt! error: "+ e.getMessage() + "\n");
             Main.threadSleep(Main.getDefaultRetryTime());
             shuffleLinesRetryable();
         }
     }
-
-    private static final VirtualBrowser virtualBrowser = new VirtualBrowser();
-    public static void updateLimitedsTXT() {
-        try {
-            HashMap<String,Object> args = virtualBrowser.openWebsite("https://rblx.trade/api/v1/catalog/all","GET",null,null,null,false,false);
-            TextFile limitedsTXT = new TextFile("src/main/resources/Limiteds.txt");
-            List<String> IDs = JSON.getItemIdsFromRolimonAPI(args.get("response").toString());
-
-            for (String id: IDs) {
-                if (id != null && !limitedsTXT.findString(id)) {
-                    limitedsTXT.writeString(id + "\n");
-                    System.out.println("Added new limited id: " + id);
-                }
-            }
-
-        }catch (IOException ignored) {}
-    }
-
     public static void limitedToInfoMerge(HashMap<Long,List<Object>> newLimitedToInfo) {
         for (Long key : newLimitedToInfo.keySet()) {
             if (!LimitedToInfo.containsKey(key)) {LimitedToInfo.put(key,newLimitedToInfo.get(key));}
@@ -99,14 +85,13 @@ public class LimitedPriceTracker {
                     }
 
                     Main.discordBot.sendMessageOnRegisteredChannels(
-                        key + " | " + formattedValue + "%" + " | " + price_difference_string + ping_role + "\n" +
-                                "```diff\n" +
-                                ">> "+ LimitedToInfo.get(key).get(1) +"\n" +
-                                sign + "> "+ newLimitedToInfo.get(key).get(1) +"\n" +
-                                "```" + "```java\n" +
-                                "Name: " + "\"" + newLimitedToInfo.get(key).get(0) + "\"\n" +
-                                "RAP: " + newLimitedToInfo.get(key).get(2) +"```",0
-                    );
+                            key + " | " + formattedValue + "%" + " | " + price_difference_string + ping_role + "\n" +
+                                    "```diff\n" +
+                                    ">> "+ LimitedToInfo.get(key).get(1) +"\n" +
+                                    sign + "> "+ newLimitedToInfo.get(key).get(1) +"\n" +
+                                    "```" + "```java\n" +
+                                    "Name: " + "\"" + newLimitedToInfo.get(key).get(0) + "\"\n" +
+                                    "RAP: " + newLimitedToInfo.get(key).get(2) +"```",0);
 
                     LimitedToInfo.remove(key);
                     LimitedToInfo.put(key,newLimitedToInfo.get(key));

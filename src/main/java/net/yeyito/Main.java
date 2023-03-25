@@ -2,16 +2,15 @@ package net.yeyito;
 
 import net.dv8tion.jda.api.entities.Activity;
 import net.yeyito.connections.*;
-import net.yeyito.connections.tor.TorInstance;
-import net.yeyito.connections.tor.TorManager;
 import net.yeyito.roblox.CatalogScanner;
 import net.yeyito.roblox.LimitedPriceTracker;
-import net.yeyito.roblox.RequestManager;
+import net.yeyito.util.TextFile;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Proxy;
 import java.util.Scanner;
 
 public class Main {
@@ -21,7 +20,6 @@ public class Main {
 
     public static void main(String[] args) {
         listenForExitCommand();
-        TorManager.generateInstances(1,9050,9051);
 
         System.out.println("Waiting for registered channel");
         while (discordBot.registeredTextChannels.isEmpty()) {
@@ -29,13 +27,14 @@ public class Main {
         }
         System.out.println("Channel registered.");
 
-        LimitedPriceTracker.updateLimitedsTXT();
-        RequestManager.handleRequests();
+        while (true) {
+            LimitedTXTUpdater.updateLimitedsTXT();
+            LimitedPriceTracker.updatePrices();
+        }
     }
     public static int getDefaultRetryTime() {
         return 5000;
     }
-
     public static void threadSleep(int timeMillis) {
         try {Thread.sleep(timeMillis);} catch (InterruptedException ie) {ie.printStackTrace(); System.out.println("Who the fuck is interrupting my threads?!");}
     }
@@ -48,7 +47,7 @@ public class Main {
             if (!line.contains("OK!")) {System.out.println(line);}
         }
         if (process.getErrorStream() != null && process.getErrorStream().available() > 0 && PRINT_CMD_ERRORS) {
-            System.err.println(process.getErrorStream().toString());
+            new TextFile("src/main/resources/Logs/StackTrace.txt").writeString("\nError with terminal: "+ process.getErrorStream().toString() + "\n");
         }
     }
 
@@ -63,7 +62,7 @@ public class Main {
             if (!line.contains("OK!")) {System.out.println(line);}
         }
         if (process.getErrorStream() != null && process.getErrorStream().available() > 0 && PRINT_CMD_ERRORS) {
-            System.err.println(process.getErrorStream().toString());
+            new TextFile("src/main/resources/Logs/StackTrace.txt").writeString("\nError with terminal: "+ process.getErrorStream().toString() + "\n");
         }
     }
 
@@ -75,14 +74,6 @@ public class Main {
                 if (command.equals("exit")) {
                     System.out.println("Exiting!");
 
-                    String[] CMD = {"route","DELETE", RouteManager.getHostIPfromURL("catalog.roblox.com")};
-                    try {
-                        Runtime.getRuntime().exec(CMD);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    TorManager.exitInstances();
                     CatalogScanner.CatalogSummary.summarize();
                     System.exit(0);
                     break;
@@ -92,4 +83,3 @@ public class Main {
         inputThread.start();
     }
 }
-
