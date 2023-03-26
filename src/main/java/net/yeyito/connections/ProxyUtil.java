@@ -7,10 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public class ProxyUtil {
@@ -46,8 +43,9 @@ public class ProxyUtil {
 
     public static Proxy grabAvailableProxy() {
         if (!availableProxies.isEmpty()) {
+            Collections.shuffle(availableProxies);
             Proxy proxy = availableProxies.get(0);
-            availableProxies.remove(0);
+            availableProxies.remove(proxy);
             return proxy;
         }
         else {return null;}

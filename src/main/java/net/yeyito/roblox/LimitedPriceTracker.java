@@ -14,7 +14,6 @@ import java.util.*;
 public class LimitedPriceTracker {
     public static HashMap<Long,List<Object>> LimitedToInfo = new HashMap<>();
     //List<Object> = String name, Long Price, Long RAP, Long Original_Price, Long Quantity_Sold, List<Long Price,Long Os.Time> Data Points
-    static int index = 0;
 
     public static void updatePrices() {
         shuffleLinesRetryable();
@@ -30,15 +29,12 @@ public class LimitedPriceTracker {
         }
         scanner.close();
         CatalogScanner.itemBulkToPrice(itemIDs);
-
-        if (index % 7 == 0 && index != 0) {System.out.print("\n");}
-        index++;
     }
     public static Scanner scanLinesRetryable() {
         try {
             return new Scanner(new File("src/main/resources/Limiteds.txt"));
         } catch (FileNotFoundException e) {
-            new TextFile("src/main/resources/Logs/StackTrace.txt").writeString("\ncould not scan the lines of src/main/resources/Limiteds.txt! error: "+ e.getMessage() + "\n");
+            new TextFile("src/main/resources/StackTrace.txt").writeString("\ncould not scan the lines of src/main/resources/Limiteds.txt! error: "+ e.getMessage() + "\n");
             Main.threadSleep(Main.getDefaultRetryTime());
             return scanLinesRetryable();
         }
@@ -47,7 +43,7 @@ public class LimitedPriceTracker {
         try {
             new TextFile("src/main/resources/Limiteds.txt").shuffleLines();
         } catch (IOException e) {
-            new TextFile("src/main/resources/Logs/StackTrace.txt").writeString("\ncould not shuffle the lines of src/main/resources/Limiteds.txt! error: "+ e.getMessage() + "\n");
+            new TextFile("src/main/resources/StackTrace.txt").writeString("\ncould not shuffle the lines of src/main/resources/Limiteds.txt! error: "+ e.getMessage() + "\n");
             Main.threadSleep(Main.getDefaultRetryTime());
             shuffleLinesRetryable();
         }
@@ -63,7 +59,7 @@ public class LimitedPriceTracker {
                     String price_difference_string;
                     String ping_role = "";
 
-                    if (newLimitedToInfo.get(key).get(1) == null || LimitedToInfo.get(key).get(1) == null) {sign = "??";}
+                    if (newLimitedToInfo.get(key).get(1) == null || LimitedToInfo.get(key).get(1) == null) {new TextFile("src/main/resources/StackTrace.txt").writeString("\n an item's price is null, voiding it! \n"); return;} // If it updates to null just return
                     else if ((Long) newLimitedToInfo.get(key).get(1) >= (Long) LimitedToInfo.get(key).get(1)) {sign = "+"; price_difference_percentage = (double) Math.abs((Long) LimitedToInfo.get(key).get(1) - (Long) newLimitedToInfo.get(key).get(1)) / (Long) LimitedToInfo.get(key).get(1);}
                     else if ((Long) newLimitedToInfo.get(key).get(1) < (Long) LimitedToInfo.get(key).get(1)) {sign = "-"; price_difference_percentage = (double) Math.abs((Long) LimitedToInfo.get(key).get(1) - (Long) newLimitedToInfo.get(key).get(1)) / (Long) LimitedToInfo.get(key).get(1);}
                     price_difference_percentage = price_difference_percentage*100;
@@ -82,6 +78,11 @@ public class LimitedPriceTracker {
 
                     for (Object o: CatalogScanner.itemToInfo(key)) {
                         newLimitedToInfo.get(key).add(o);
+                    }
+
+                    // Buying functionality
+                    if ((Long) newLimitedToInfo.get(key).get(1) < 21) {
+                        ItemManager.buyItem(key);
                     }
 
                     Main.discordBot.sendMessageOnRegisteredChannels(

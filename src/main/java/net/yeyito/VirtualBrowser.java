@@ -53,7 +53,8 @@ public class VirtualBrowser {
             os.write(payload.getBytes());
             os.flush();
             os.close();
-            if (print) {System.out.println("Payload added. conent-length set to: " + payload.getBytes().length);}
+            if (print) {System.out.println("Payload added. conent-length set to: " + payload.getBytes().length);
+            System.out.println("Payload: " + payload);}
         } else if (Objects.equals(requestMethod,"POST")) {
             connection.setDoOutput(true);
             connection.setFixedLengthStreamingMode(0);

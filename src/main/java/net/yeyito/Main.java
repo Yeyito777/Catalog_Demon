@@ -5,19 +5,24 @@ import net.yeyito.connections.*;
 import net.yeyito.roblox.CatalogScanner;
 import net.yeyito.roblox.LimitedPriceTracker;
 import net.yeyito.util.TextFile;
+import org.checkerframework.checker.units.qual.C;
+import org.openqa.selenium.Cookie;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Proxy;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Main {
-    @Deprecated public static String key_of_the_day = "_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_73ADBA4F2B96C51F11DA5552CBBDCFB1633965181AA7EF5146EBB4465361005C3CD2BE42B5AD1DACAAB3C23F57C8865EF0CF0A497410D04C2D5D64A012ECEDD3FF417E2A671FEE9BDB2DA513EF2B250799B9A981D1EFD227FD16B09FFBC57F4814D615311BE9BDAED3FDDFA30DDA50437CE57001337023C4618840B9E4CDB51849BDC0328AE51E7918DAED83C9619972CEEBD55B2C54601C7B6E23B6784EC6D3BE14B731CB3DFF9EC990327869F77C8D93AB0D249F600CED6E3CC7B172D89449C9F6936B24D388A0037381419CC7CDBAB81B1F4FED212F26347DA1AFC9862825B65B5006F0792C343C0E15D638118E9CB2448A72EA513D31FC7D507C85053D9E486BAD31C2A36D37EA3DBC746B8EBF1B9370993520900139138536121D5FF3DB522D1089BAF39B7477569587BAA5BCCAB9223BB81A77D14DAA85CC0BDE5DDC59F4FD88821D8412751278D5FE9BEFAC00F9E7168D4FD2951204A9AD202D32BAC3C1C4B36E40624C34A65D02DDF75DE464B68F45D3";
     public static DiscordBot discordBot = new DiscordBot("MTA3MTExNzYzMjcyNTU5NDE4Mg.Gq6H6P.xQrsfOvWAPf0HxizJSed-MPRco_9yjAsqckpv8", Activity.playing("no games"));
     public static boolean PRINT_CMD_ERRORS = false;
-
+    public static ChromeDriver driver;
     public static void main(String[] args) {
         listenForExitCommand();
 
@@ -47,7 +52,7 @@ public class Main {
             if (!line.contains("OK!")) {System.out.println(line);}
         }
         if (process.getErrorStream() != null && process.getErrorStream().available() > 0 && PRINT_CMD_ERRORS) {
-            new TextFile("src/main/resources/Logs/StackTrace.txt").writeString("\nError with terminal: "+ process.getErrorStream().toString() + "\n");
+            new TextFile("src/main/resources/StackTrace.txt").writeString("\nError with terminal: "+ process.getErrorStream().toString() + "\n");
         }
     }
 
@@ -62,7 +67,7 @@ public class Main {
             if (!line.contains("OK!")) {System.out.println(line);}
         }
         if (process.getErrorStream() != null && process.getErrorStream().available() > 0 && PRINT_CMD_ERRORS) {
-            new TextFile("src/main/resources/Logs/StackTrace.txt").writeString("\nError with terminal: "+ process.getErrorStream().toString() + "\n");
+            new TextFile("src/main/resources/StackTrace.txt").writeString("\nError with terminal: "+ process.getErrorStream().toString() + "\n");
         }
     }
 

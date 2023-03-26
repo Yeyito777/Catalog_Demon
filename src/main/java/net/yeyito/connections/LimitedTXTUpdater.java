@@ -25,7 +25,7 @@ public class LimitedTXTUpdater {
             }
 
         }catch (IOException e) {
-            new TextFile("src/main/resources/Logs/StackTrace.txt").writeString("\nCould not update limiteds.txt error: " + e.toString() + " will retry on next loop.\n");
+            new TextFile("src/main/resources/StackTrace.txt").writeString("\nCould not update limiteds.txt error: " + e.toString() + " will retry on next loop.\n");
         }
     }
 }

@@ -13,6 +13,9 @@ import java.net.Proxy;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
 
 public class CatalogScanner {
@@ -20,7 +23,8 @@ public class CatalogScanner {
     static boolean initComplete = false;
 
     public static class CatalogSummary {
-        static int index = -1;
+        static int index = 0;
+        static int indexDot = 0;
         static String[] ANSI_COLORS = new String[]{"\u001B[30m","\u001B[31m","\u001B[32m","\u001B[33m","\u001B[34m","\u001B[35m","\u001B[36m","\u001B[37m"};
         static HashMap<Integer,String> conToColor = new HashMap<>();
         static long startTime;
@@ -43,6 +47,10 @@ public class CatalogScanner {
 
         public static void count(int number,Integer id) {
             itemsScanned = itemsScanned+number;
+
+            if (indexDot % 140 == 0 && indexDot != 0) {System.out.print("\n");}
+            indexDot++;
+
             if (id == null) {
                 System.out.print("." + "\u001B[0m");
             } else {
@@ -55,10 +63,15 @@ public class CatalogScanner {
                 }
             }
         }
+        public static void error() {
+            if (indexDot % 140 == 0 && indexDot != 0) {System.out.print("\n");}
+            indexDot++;
+            System.out.print("*");
+        }
     }
 
     public static void itemBulkToPrice(List<Long> IDs) {
-        if (!initComplete) {CatalogSummary.init(); virtualBrowser.muteErrors(); initComplete = true; new TextFile("src/main/resources/StackTrace.txt").deleteAllText();}
+        if (!initComplete) {CatalogSummary.init(); virtualBrowser.muteErrors(); initComplete = true; new TextFile("src/main/resources/StackTrace.txt").deleteAllText(); new TextFile("src/main/resources/Logs/ProxyLogs.txt").deleteAllText();}
 
         if (IDs.size() <= 120) {
             LimitedPriceTracker.limitedToInfoMerge(Objects.requireNonNull(itemBulkToPriceRequest(IDs, getXCSRF_Token(virtualBrowser),virtualBrowser)));
@@ -73,25 +86,56 @@ public class CatalogScanner {
                 listOfIDsLists.add(listOfIDs);
             }
 
-            CompletableFuture<Void> async = CompletableFuture.runAsync(() -> {
-                int listNumber = 1;
-                while (listNumber < 3) {
-                    VirtualBrowser v2 = virtualBrowser;
-                    virtualBrowser.setProxy(ProxyUtil.grabAvailableProxy());
-                    if (virtualBrowser.proxy == null) {System.out.println("No available proxy"); return;}
-                    String token = getXCSRF_Token(v2);
-                    Main.threadSleep(3750);
+            List<CompletableFuture<Void>> asyncList = new ArrayList<>();
+            for (int j = 0; j < 1; j++) {
+                Proxy[] proxySupplier = new Proxy[]{ProxyUtil.grabAvailableProxy(),ProxyUtil.grabAvailableProxy()};
+                CompletableFuture<Void> async = CompletableFuture.runAsync(() -> {
+                    int listNumber = 1;
+                    while (listNumber < 3) {
+                        VirtualBrowser v2 = new VirtualBrowser();
+                        v2.muteErrors();
+                        v2.setProxy(proxySupplier[listNumber-1]);
+                        if (v2.proxy == null) {
+                            System.out.println("No available proxy");
+                            return;
+                        }
+                        String token = getXCSRF_Token(v2);
+                        Main.threadSleep(3750);
 
-                    for (int i = 0; i < 10; i++) {
-                        int finalI = i*listNumber;
-                        CompletableFuture.runAsync(() -> {LimitedPriceTracker.limitedToInfoMerge(Objects.requireNonNull(itemBulkToPriceRequest(listOfIDsLists.get(finalI), token,v2)));});
-                        Main.threadSleep(500);
+                        for (int i = 0; i < 10; i++) {
+                            int finalI = i * listNumber;
+                            CompletableFuture.runAsync(() -> {
+                                LimitedPriceTracker.limitedToInfoMerge(Objects.requireNonNull(itemBulkToPriceRequest(listOfIDsLists.get(finalI), token, v2)));
+                            });
+                            Main.threadSleep(500);
+                        }
+                        ProxyUtil.freeProxy(v2.proxy, 60);
+                        listNumber++;
                     }
-                    ProxyUtil.freeProxy(virtualBrowser.proxy,60);
-                    listNumber++;
+                });
+                asyncList.add(async);
+            }
+
+            for (CompletableFuture<Void> async : asyncList) {
+                try {
+                    CompletableFuture.anyOf(
+                            async,
+                            CompletableFuture.supplyAsync(() -> {
+                                try {
+                                    TimeUnit.SECONDS.sleep(30);
+                                } catch (InterruptedException e) {
+                                    // Ignore the interruption
+                                }
+                                return null;
+                            })
+                    ).get(30, TimeUnit.SECONDS);
+                } catch (InterruptedException | ExecutionException e) {
+                    // Handle exceptions, if any
+                } catch (TimeoutException e) {
+                    // Timeout reached, cancel the CompletableFuture
+                    async.cancel(true);
                 }
-            });
-            async.join();
+            }
         }
     }
 
@@ -128,7 +172,7 @@ public class CatalogScanner {
 
             return JSON.itemBatchStringToHashMap(itemsResponse.get("response").toString());
         } catch (IOException e) {
-            System.out.print("*");
+            CatalogSummary.error(); // *
             new TextFile("src/main/resources/Logs/ProxyLogs.txt").writeString("*");
             new TextFile("src/main/resources/StackTrace.txt").writeString(browser.proxy + " " + e.getMessage() + "\n");
             return null;
@@ -159,12 +203,13 @@ public class CatalogScanner {
         }
     }
     public static List<Object> itemToInfo(long ID) {
+        if (ID == 0) {return null;}
         try {
             HashMap<String,Object> args = virtualBrowser.openWebsite("https://economy.roblox.com/v1/assets/" + ID + "/resale-data","GET",null,null,null,false,false);
             return JSON.itemToInfo(args.get("response").toString());
         }catch (IOException e) {
-            new TextFile("src/main/resources/Logs/StackTrace.txt").writeString("\nCould not retrieve item info of id" + ID + "\n");
-            Main.threadSleep(Main.getDefaultRetryTime()/2);
+            new TextFile("src/main/resources/StackTrace.txt").writeString("\nCould not retrieve item info of id " + ID + "\n");
+            Main.threadSleep(Main.getDefaultRetryTime()/5);
             return itemToInfo(ID);
         }
     }
