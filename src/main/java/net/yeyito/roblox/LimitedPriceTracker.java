@@ -53,7 +53,6 @@ public class LimitedPriceTracker {
             if (!LimitedToInfo.containsKey(key)) {LimitedToInfo.put(key,newLimitedToInfo.get(key));}
             else {
                 if (!Objects.equals((Long) LimitedToInfo.get(key).get(1), (Long) newLimitedToInfo.get(key).get(1))) {
-
                     String sign = "";
                     double price_difference_percentage = 0;
                     String price_difference_string;
@@ -80,24 +79,14 @@ public class LimitedPriceTracker {
                         newLimitedToInfo.get(key).add(o);
                     }
 
-                    // Buying functionality
-                    if ((Long) newLimitedToInfo.get(key).get(1) < 21) {
-                        try {
+                    // Buying Function
+                    try {
+                        if ((Long) newLimitedToInfo.get(key).get(1) < (Integer) newLimitedToInfo.get(key).get(2) / 2 || (Long) newLimitedToInfo.get(key).get(1) < 21) {
                             ItemManager.buyItem(key);
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
-                    }
-                    // Buying func 2
-                    if ((Long) newLimitedToInfo.get(key).get(1) < ((Long) newLimitedToInfo.get(key).get(2))/2) {
-                        try {
-                            ItemManager.buyItem(key);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    } catch (Exception e) {e.printStackTrace();}
 
-                    System.out.println("Hello?");
+                    // Sending message
                     Main.discordBot.sendMessageOnRegisteredChannels(
                             key + " | " + formattedValue + "%" + " | " + price_difference_string + ping_role + "\n" +
                                     "```diff\n" +

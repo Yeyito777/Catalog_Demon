@@ -34,7 +34,7 @@ public class JSON {
         List<Object> itemInfo = new ArrayList<>();
         JSONObject contentJson = new JSONObject(contentString);
 
-        Object recentAveragePrice = contentJson.get("recentAveragePrice");
+        Object recentAveragePrice = contentJson.get("recentAveragePrice"); // Integer
         itemInfo.add(recentAveragePrice);
 
         Object originalPrice = contentJson.get("originalPrice");

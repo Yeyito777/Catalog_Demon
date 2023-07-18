@@ -31,90 +31,94 @@ import java.util.regex.Pattern;
 
 public class ItemManager {
     static List<Long> boughtIDs = new ArrayList<>();
-    public static void buyItem(long id) throws IOException, InterruptedException, URISyntaxException {
-        Main.discordBot.sendMessageOnRegisteredChannels("Buying item: " + id,0);
-        String expected_price = "";
-        String seller_id = "";
-        String expected_currency = "";
-        String productID = "";
-        String token = "";
-        String user_asset_id = "";
-        String user_robux = "";
+    public static void buyItem(long id) {
+        try {
+            Main.discordBot.sendMessageOnRegisteredChannels("Buying item: " + id, 0);
+            String expected_price = "";
+            String seller_id = "";
+            String expected_currency = "";
+            String productID = "";
+            String token = "";
+            String user_asset_id = "";
+            String user_robux = "";
 
-        VirtualBrowser virtualBrowser = new VirtualBrowser();
-        String getItem = (String) virtualBrowser.curlToOpenWebsite("curl 'https://www.roblox.com/catalog/"+id+"' \\\n" +
-                "  -H 'cookie: "+Main.secCookie+"' \\\n").get("response");
+            VirtualBrowser virtualBrowser = new VirtualBrowser();
+            String getItem = (String) virtualBrowser.curlToOpenWebsite("curl 'https://www.roblox.com/catalog/" + id + "' \\\n" +
+                    "  -H 'cookie: " + Main.secCookie + "' \\\n").get("response");
 
-        String[] searches = {"data-product-id=", "data-token=", "data-expected-price=", "data-expected-seller-id=", "data-expected-currency=", "data-lowest-private-sale-userasset-id=", "data-user-balance-robux="};
+            String[] searches = {"data-product-id=", "data-token=", "data-expected-price=", "data-expected-seller-id=", "data-expected-currency=", "data-lowest-private-sale-userasset-id=", "data-user-balance-robux="};
 
-        for (String search : searches) {
-            int index = getItem.indexOf(search);
-            if (index != -1) {
-                String sub = getItem.substring(index + search.length() + 1);
-                Pattern pattern = search.equals("data-product-id=") ? Pattern.compile("\\d+") : Pattern.compile("[^\"\\s]*");
-                Matcher matcher = pattern.matcher(sub);
+            for (String search : searches) {
+                int index = getItem.indexOf(search);
+                if (index != -1) {
+                    String sub = getItem.substring(index + search.length() + 1);
+                    Pattern pattern = search.equals("data-product-id=") ? Pattern.compile("\\d+") : Pattern.compile("[^\"\\s]*");
+                    Matcher matcher = pattern.matcher(sub);
 
-                if (matcher.find()) {
-                    String result = matcher.group();
-                    switch (search) {
-                        case "data-product-id=":
-                            productID = result;
-                            break;
-                        case "data-token=":
-                            token = result;
-                            break;
-                        case "data-expected-price=":
-                            expected_price = result;
-                            break;
-                        case "data-expected-seller-id=":
-                            seller_id = result;
-                            break;
-                        case "data-expected-currency=":
-                            expected_currency = result;
-                            break;
-                        case "data-lowest-private-sale-userasset-id=":
-                            user_asset_id = result;
-                            break;
-                        case "data-user-balance-robux=":
-                            user_robux = result;
-                            break;
+                    if (matcher.find()) {
+                        String result = matcher.group();
+                        switch (search) {
+                            case "data-product-id=":
+                                productID = result;
+                                break;
+                            case "data-token=":
+                                token = result;
+                                break;
+                            case "data-expected-price=":
+                                expected_price = result;
+                                break;
+                            case "data-expected-seller-id=":
+                                seller_id = result;
+                                break;
+                            case "data-expected-currency=":
+                                expected_currency = result;
+                                break;
+                            case "data-lowest-private-sale-userasset-id=":
+                                user_asset_id = result;
+                                break;
+                            case "data-user-balance-robux=":
+                                user_robux = result;
+                                break;
+                        }
                     }
                 }
             }
-        }
 
-        System.out.println("Product ID: " + productID);
-        System.out.println("Token: " + token);
-        System.out.println("Expected Price: " + expected_price);
-        System.out.println("Seller ID: " + seller_id);
-        System.out.println("Expected Currency: " + expected_currency);
-        System.out.println("User Assed ID: " + user_asset_id);
-        System.out.println("User Robux: " + user_robux);
+            System.out.println("Product ID: " + productID);
+            System.out.println("Token: " + token);
+            System.out.println("Expected Price: " + expected_price);
+            System.out.println("Seller ID: " + seller_id);
+            System.out.println("Expected Currency: " + expected_currency);
+            System.out.println("User Assed ID: " + user_asset_id);
+            System.out.println("User Robux: " + user_robux);
 
-        if (buyModel(Integer.parseInt(user_robux),Integer.parseInt(expected_price),id)) {
-            JSONObject body = new JSONObject();
-            body.put("expectedCurrency", expected_currency);
-            body.put("expectedPrice", expected_price);
-            body.put("expectedSellerId", seller_id);
-            body.put("userAssetId", user_asset_id);
+            if (buyModel(Integer.parseInt(user_robux), Integer.parseInt(expected_price), id)) {
+                JSONObject body = new JSONObject();
+                body.put("expectedCurrency", expected_currency);
+                body.put("expectedPrice", expected_price);
+                body.put("expectedSellerId", seller_id);
+                body.put("userAssetId", user_asset_id);
 
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI("https://economy.roblox.com/v1/purchases/products/" + productID))
-                    .header("authority", "economy.roblox.com")
-                    .header("Content-Type", "application/json; charset=utf-8")
-                    .header("cookie", Main.secCookie)
-                    .header("x-csrf-token", token)
-                    .POST(HttpRequest.BodyPublishers.ofString(body.toString()))
-                    .build();
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.statusCode());
-            System.out.println(response.body());
-            if (response.statusCode() == 200) {
-                Main.discordBot.sendMessageOnRegisteredChannels("Successfully bought item: " + id, 0);
+                HttpClient client = HttpClient.newHttpClient();
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(new URI("https://economy.roblox.com/v1/purchases/products/" + productID))
+                        .header("authority", "economy.roblox.com")
+                        .header("Content-Type", "application/json; charset=utf-8")
+                        .header("cookie", Main.secCookie)
+                        .header("x-csrf-token", token)
+                        .POST(HttpRequest.BodyPublishers.ofString(body.toString()))
+                        .build();
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                System.out.println(response.statusCode());
+                System.out.println(response.body());
+                if (response.statusCode() == 200) {
+                    Main.discordBot.sendMessageOnRegisteredChannels("Successfully bought item: " + id, 0);
+                }
+            } else {
+                System.err.println("Sudden price change of item: " + id + " detected price: " + expected_price);
             }
-        } else {
-            System.err.println("Sudden price change of item: " + id + " detected price: " + expected_price);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     public static boolean buyModel(int userRobux, int currentPrice, long itemID) throws IOException {
@@ -122,6 +126,7 @@ public class ItemManager {
         if (boughtIDs.contains(itemID)) {return false;}
         if (currentPrice < userRobux/3) {
             VirtualBrowser virtualBrowser = new VirtualBrowser();
+            // Small optimization, get datapoints from LimitedTXTUpdater Hashmap -> List (Check JSON itemToInfo) This saves ~110ms
             String priceDataPoints = (String) virtualBrowser.openWebsite("https://economy.roblox.com/v1/assets/110295354/resale-data","GET",null,null,null,false,false).get("response");
             JSONObject json = new JSONObject(priceDataPoints);
             JSONArray priceDataPointsArray = json.getJSONArray("priceDataPoints");
