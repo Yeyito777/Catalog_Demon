@@ -76,13 +76,17 @@ public class LimitedPriceTracker {
                     DecimalFormat decimalFormat = new DecimalFormat("#.#");
                     String formattedValue = decimalFormat.format(price_difference_percentage);
 
-                    for (Object o: CatalogScanner.itemToInfo(key)) {
+                    for (Object o: Objects.requireNonNull(CatalogScanner.itemToInfo(key))) {
                         newLimitedToInfo.get(key).add(o);
                     }
 
                     // Buying functionality
                     if ((Long) newLimitedToInfo.get(key).get(1) < 21) {
-                        ItemManager.buyItem(key);
+                        try {
+                            ItemManager.buyItem(key);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     Main.discordBot.sendMessageOnRegisteredChannels(

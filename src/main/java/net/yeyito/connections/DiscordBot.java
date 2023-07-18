@@ -49,13 +49,6 @@ public class DiscordBot extends ListenerAdapter {
                         commands.register_channel(event, arguments);
                     }
                 }
-                case ";buy" -> {
-                    if (event.getAuthor().getId().equals("310543961825738754")) {
-                        commands.buy_item(event, arguments);
-                    } else {
-                        event.getMessage().getChannel().sendMessage("Hiss!!!! I only buy items if my owner tells me to do so! \uD83D\uDC31");
-                    }
-                }
             }
         }
     }
@@ -82,14 +75,6 @@ class Commands {
         else {
             Main.discordBot.registeredTextChannels.add(event.getMessage().getChannel().asTextChannel());
             event.getMessage().getChannel().sendMessage(event.getMessage().getChannel().asTextChannel().getName() + " is now visible to Yeyito!").queue();
-        }
-    }
-
-    public void buy_item(MessageReceivedEvent event, String[] args) {
-        if (args.length != 2) {event.getChannel().sendMessage("Invalid syntax!").queue();}
-        else {
-            event.getMessage().getChannel().sendMessage("buying " + args[1] + "!").queue();
-            ItemManager.buyItem(Long.parseLong(args[1]));
         }
     }
 }
