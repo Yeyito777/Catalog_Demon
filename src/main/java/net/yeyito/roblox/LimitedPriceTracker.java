@@ -88,7 +88,16 @@ public class LimitedPriceTracker {
                             e.printStackTrace();
                         }
                     }
+                    // Buying func 2
+                    if ((Long) newLimitedToInfo.get(key).get(1) < ((Long) newLimitedToInfo.get(key).get(2))/2) {
+                        try {
+                            ItemManager.buyItem(key);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
 
+                    System.out.println("Hello?");
                     Main.discordBot.sendMessageOnRegisteredChannels(
                             key + " | " + formattedValue + "%" + " | " + price_difference_string + ping_role + "\n" +
                                     "```diff\n" +

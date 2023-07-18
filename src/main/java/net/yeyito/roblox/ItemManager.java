@@ -4,6 +4,7 @@ import net.yeyito.Main;
 import net.yeyito.VirtualBrowser;
 import net.yeyito.connections.DiscordBot;
 import net.yeyito.util.StringFilter;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
@@ -19,6 +20,9 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ItemManager {
+    static List<Long> boughtIDs = new ArrayList<>();
     public static void buyItem(long id) throws IOException, InterruptedException, URISyntaxException {
         Main.discordBot.sendMessageOnRegisteredChannels("Buying item: " + id,0);
         String expected_price = "";
@@ -34,12 +39,13 @@ public class ItemManager {
         String productID = "";
         String token = "";
         String user_asset_id = "";
+        String user_robux = "";
 
         VirtualBrowser virtualBrowser = new VirtualBrowser();
         String getItem = (String) virtualBrowser.curlToOpenWebsite("curl 'https://www.roblox.com/catalog/"+id+"' \\\n" +
                 "  -H 'cookie: "+Main.secCookie+"' \\\n").get("response");
 
-        String[] searches = {"data-product-id=", "data-token=", "data-expected-price=", "data-expected-seller-id=", "data-expected-currency=", "data-lowest-private-sale-userasset-id="};
+        String[] searches = {"data-product-id=", "data-token=", "data-expected-price=", "data-expected-seller-id=", "data-expected-currency=", "data-lowest-private-sale-userasset-id=", "data-user-balance-robux="};
 
         for (String search : searches) {
             int index = getItem.indexOf(search);
@@ -69,6 +75,9 @@ public class ItemManager {
                         case "data-lowest-private-sale-userasset-id=":
                             user_asset_id = result;
                             break;
+                        case "data-user-balance-robux=":
+                            user_robux = result;
+                            break;
                     }
                 }
             }
@@ -80,8 +89,9 @@ public class ItemManager {
         System.out.println("Seller ID: " + seller_id);
         System.out.println("Expected Currency: " + expected_currency);
         System.out.println("User Assed ID: " + user_asset_id);
+        System.out.println("User Robux: " + user_robux);
 
-        if (Integer.parseInt(expected_price) < 21) {
+        if (buyModel(Integer.parseInt(user_robux),Integer.parseInt(expected_price),id)) {
             JSONObject body = new JSONObject();
             body.put("expectedCurrency", expected_currency);
             body.put("expectedPrice", expected_price);
@@ -107,5 +117,84 @@ public class ItemManager {
             System.err.println("Sudden price change of item: " + id + " detected price: " + expected_price);
         }
     }
+    public static boolean buyModel(int userRobux, int currentPrice, long itemID) throws IOException {
+        if (currentPrice < 21) {return true;}
+        if (boughtIDs.contains(itemID)) {return false;}
+        if (currentPrice < userRobux/3) {
+            VirtualBrowser virtualBrowser = new VirtualBrowser();
+            String priceDataPoints = (String) virtualBrowser.openWebsite("https://economy.roblox.com/v1/assets/110295354/resale-data","GET",null,null,null,false,false).get("response");
+            JSONObject json = new JSONObject(priceDataPoints);
+            JSONArray priceDataPointsArray = json.getJSONArray("priceDataPoints");
+
+            Double average30 = calculateAveragePriceLastDays(priceDataPointsArray, 30);
+            Double average90 = calculateAveragePriceLastDays(priceDataPointsArray, 90);
+            Double average180 = calculateAveragePriceLastDays(priceDataPointsArray, 180);
+            Double variance = calculateAverageVariance(priceDataPointsArray);
+            System.out.println("Average Variance: " + variance);
+            System.out.println("Average Price Last 30 Days: " + average30);
+            System.out.println("Average Price Last 90 Days: " + average90);
+            System.out.println("Average Price Last 180 Days: " + average180);
+
+            if (average30 == null || average90 == null || average180 == null || variance == null) {return false;}
+            if (average30*variance < currentPrice || average90*variance < currentPrice || average180*variance < currentPrice) {return false;}
+            if (currentPrice > average30/2 || currentPrice > average90/2 || currentPrice > average180/2) {return false;}
+            if (activityInDays(priceDataPointsArray,30) <= 3) {return false;}
+            boughtIDs.add(itemID);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static Double calculateAverageVariance(JSONArray priceDataPointsArray) {
+        int n = priceDataPointsArray.length();
+        if (n == 0) return null;
+
+        double sum = 0, indVariance;
+        for (int i = 1; i < n; i++) {
+            double variance = (double) (priceDataPointsArray.getJSONObject(i).getInt("value") - priceDataPointsArray.getJSONObject(i - 1).getInt("value")) / (priceDataPointsArray.getJSONObject(i).getInt("value") + priceDataPointsArray.getJSONObject(i-1).getInt("value"));
+            sum += Math.abs(variance);
+        }
+
+        indVariance = sum / n;
+        return indVariance;
+    }
+
+    public static Double calculateAveragePriceLastDays(JSONArray priceDataPointsArray, int days) {
+        LocalDate now = LocalDate.now();
+        LocalDate pastDate = now.minusDays(days);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        double sum = 0;
+        int count = 0;
+        for (int i = 0; i < priceDataPointsArray.length(); i++) {
+            JSONObject dataPoint = priceDataPointsArray.getJSONObject(i);
+            LocalDate date = LocalDate.parse(dataPoint.getString("date").substring(0, 10), formatter);
+            if (!date.isBefore(pastDate)) {
+                sum += dataPoint.getInt("value");
+                count++;
+            }
+        }
+
+        return (count == 0) ? null : (sum / count);
+    }
+
+    public static int activityInDays(JSONArray priceDataPointsArray, int days) {
+        LocalDate now = LocalDate.now();
+        LocalDate pastDate = now.minusDays(days);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        int count = 0;
+        for (int i = 0; i < priceDataPointsArray.length(); i++) {
+            JSONObject dataPoint = priceDataPointsArray.getJSONObject(i);
+            LocalDate date = LocalDate.parse(dataPoint.getString("date").substring(0, 10), formatter);
+            if (!date.isBefore(pastDate)) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
     public static void sellItem() {}
 }
