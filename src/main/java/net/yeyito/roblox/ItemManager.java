@@ -4,6 +4,7 @@ import net.yeyito.Main;
 import net.yeyito.VirtualBrowser;
 import net.yeyito.connections.DiscordBot;
 import net.yeyito.util.StringFilter;
+import net.yeyito.util.TextFile;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.By;
@@ -12,6 +13,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
@@ -31,9 +33,10 @@ import java.util.regex.Pattern;
 
 public class ItemManager {
     static List<Long> boughtIDs = new ArrayList<>();
-    public static void buyItem(long id) {
+    public static void buyItem(long id, @Nullable JSONArray price_data_points) {
         try {
             Main.discordBot.sendMessageOnRegisteredChannels("Buying item: " + id, 0);
+            System.out.println("Buying item: " + id);
             String expected_price = "";
             String seller_id = "";
             String expected_currency = "";
@@ -89,10 +92,10 @@ public class ItemManager {
             System.out.println("Expected Price: " + expected_price);
             System.out.println("Seller ID: " + seller_id);
             System.out.println("Expected Currency: " + expected_currency);
-            System.out.println("User Assed ID: " + user_asset_id);
+            System.out.println("User Asset ID: " + user_asset_id);
             System.out.println("User Robux: " + user_robux);
 
-            if (buyModel(Integer.parseInt(user_robux), Integer.parseInt(expected_price), id)) {
+            if (buyModel(Integer.parseInt(user_robux), Integer.parseInt(expected_price), id, price_data_points)) {
                 JSONObject body = new JSONObject();
                 body.put("expectedCurrency", expected_currency);
                 body.put("expectedPrice", expected_price);
@@ -115,21 +118,23 @@ public class ItemManager {
                     Main.discordBot.sendMessageOnRegisteredChannels("Successfully bought item: " + id, 0);
                 }
             } else {
-                System.err.println("Sudden price change of item: " + id + " detected price: " + expected_price);
+                System.err.println("Item failed buyModel: " + id + " Current price: " + expected_price);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public static boolean buyModel(int userRobux, int currentPrice, long itemID) throws IOException {
+    public static boolean buyModel(int userRobux, int currentPrice, long itemID, @Nullable JSONArray priceDataPointsArray) throws IOException {
         if (currentPrice < 21) {return true;}
         if (boughtIDs.contains(itemID)) {return false;}
         if (currentPrice < userRobux/3) {
             VirtualBrowser virtualBrowser = new VirtualBrowser();
-            // Small optimization, get datapoints from LimitedTXTUpdater Hashmap -> List (Check JSON itemToInfo) This saves ~110ms
-            String priceDataPoints = (String) virtualBrowser.openWebsite("https://economy.roblox.com/v1/assets/110295354/resale-data","GET",null,null,null,false,false).get("response");
-            JSONObject json = new JSONObject(priceDataPoints);
-            JSONArray priceDataPointsArray = json.getJSONArray("priceDataPoints");
+
+            if (priceDataPointsArray == null) { // This should only happen if an item's price was detected to be < 21 and changed on the way here.
+                String priceDataPoints = (String) virtualBrowser.openWebsite("https://economy.roblox.com/v1/assets/" + itemID + "/resale-data", "GET", null, null, null, false, false).get("response");
+                JSONObject json = new JSONObject(priceDataPoints);
+                priceDataPointsArray = json.getJSONArray("priceDataPoints");
+            }
 
             Double average30 = calculateAveragePriceLastDays(priceDataPointsArray, 30);
             Double average90 = calculateAveragePriceLastDays(priceDataPointsArray, 90);
@@ -141,9 +146,13 @@ public class ItemManager {
             System.out.println("Average Price Last 180 Days: " + average180);
 
             if (average30 == null || average90 == null || average180 == null || variance == null) {return false;}
-            if (average30*variance < currentPrice || average90*variance < currentPrice || average180*variance < currentPrice) {return false;}
+            System.out.println("Passed Check #1");
+            if (average30/2*(1-variance) < currentPrice || average90/2*(1-variance) < currentPrice || average180/2*(1-variance) < currentPrice) {return false;}
+            System.out.println("Passed Check #2");
             if (currentPrice > average30/2 || currentPrice > average90/2 || currentPrice > average180/2) {return false;}
+            System.out.println("Passed Check #3");
             if (activityInDays(priceDataPointsArray,30) <= 3) {return false;}
+            System.out.println("Passed Check #4");
             boughtIDs.add(itemID);
             return true;
         } else {

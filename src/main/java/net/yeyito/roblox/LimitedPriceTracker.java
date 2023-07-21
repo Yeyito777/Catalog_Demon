@@ -3,6 +3,7 @@ package net.yeyito.roblox;
 import net.yeyito.Main;
 import net.yeyito.util.TextFile;
 import net.yeyito.connections.DiscordBot;
+import org.json.JSONArray;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,19 +14,16 @@ import java.util.*;
 // Class tracks the price of all limiteds
 public class LimitedPriceTracker {
     public static HashMap<Long,List<Object>> LimitedToInfo = new HashMap<>();
-    //List<Object> = String name, Long Price, Long RAP, Long Original_Price, Long Quantity_Sold, List<Long Price,Long Os.Time> Data Points
+    //List<Object> = String name, Long Price, Long RAP, Long Original_Price, Long Quantity_Sold, JSONArray Price_Data_Points
 
     public static void updatePrices() {
         shuffleLinesRetryable();
         Scanner scanner = scanLinesRetryable();
         List<Long> itemIDs = new ArrayList<Long>();
 
-        int currentLine = 0;
-        int maxLine = 2400;
-        while (scanner.hasNextLine() && currentLine < maxLine) {
+        while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             itemIDs.add(Long.parseLong(line));
-            currentLine++;
         }
         scanner.close();
         CatalogScanner.itemBulkToPrice(itemIDs);
@@ -75,16 +73,22 @@ public class LimitedPriceTracker {
                     DecimalFormat decimalFormat = new DecimalFormat("#.#");
                     String formattedValue = decimalFormat.format(price_difference_percentage);
 
+                    // Instantaneous buy function
+                    try {
+                        if ((Long) newLimitedToInfo.get(key).get(1) < 21) {
+                            ItemManager.buyItem(key,null);
+                        }} catch (Exception e) {e.printStackTrace();}
+
+                    // Item data
                     for (Object o: Objects.requireNonNull(CatalogScanner.itemToInfo(key))) {
                         newLimitedToInfo.get(key).add(o);
                     }
 
-                    // Buying Function
+                    // Informed buy function
                     try {
-                        if ((Long) newLimitedToInfo.get(key).get(1) < (Integer) newLimitedToInfo.get(key).get(2) / 2 || (Long) newLimitedToInfo.get(key).get(1) < 21) {
-                            ItemManager.buyItem(key);
-                        }
-                    } catch (Exception e) {e.printStackTrace();}
+                        if ((Long) newLimitedToInfo.get(key).get(1) < (Integer) newLimitedToInfo.get(key).get(2) / 2) {
+                            ItemManager.buyItem(key,(JSONArray) newLimitedToInfo.get(key).get(5));
+                        }} catch (Exception e) {e.printStackTrace();}
 
                     // Sending message
                     Main.discordBot.sendMessageOnRegisteredChannels(

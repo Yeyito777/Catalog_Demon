@@ -70,71 +70,36 @@ public class CatalogScanner {
         }
     }
 
+    static String token = null;
     public static void itemBulkToPrice(List<Long> IDs) {
-        if (!initComplete) {CatalogSummary.init(); virtualBrowser.muteErrors(); initComplete = true; new TextFile("src/main/resources/StackTrace.txt").deleteAllText(); new TextFile("src/main/resources/Logs/ProxyLogs.txt").deleteAllText();}
+        if (!initComplete) {
+            CatalogSummary.init();
+            virtualBrowser.muteErrors();
+            initComplete = true;
+            new TextFile("src/main/resources/StackTrace.txt").deleteAllText();
+            new TextFile("src/main/resources/Logs/ProxyLogs.txt").deleteAllText();
+        }
 
-        if (IDs.size() <= 120) {
-            LimitedPriceTracker.limitedToInfoMerge(Objects.requireNonNull(itemBulkToPriceRequest(IDs, getXCSRF_Token(virtualBrowser),virtualBrowser)));
-        } else {
-            int requestNumber = (IDs.size() + 119) / 120;
-            List<List<Long>> listOfIDsLists = new ArrayList<>();
+        int requestNumber = (IDs.size() + 119) / 120;
+        List<List<Long>> listOfIDsLists = new ArrayList<>();
 
-            for (int i = 0; i < requestNumber; i++) {
-                int fromIndex = i * 120;
-                int toIndex = Math.min(fromIndex + 120, IDs.size());
-                List<Long> listOfIDs = IDs.subList(fromIndex, toIndex);
-                listOfIDsLists.add(listOfIDs);
-            }
+        for (int i = 0; i < requestNumber; i++) {
+            int fromIndex = i * 120;
+            int toIndex = Math.min(fromIndex + 120, IDs.size());
+            List<Long> listOfIDs = IDs.subList(fromIndex, toIndex);
+            listOfIDsLists.add(listOfIDs);
+        }
 
-            List<CompletableFuture<Void>> asyncList = new ArrayList<>();
-            for (int j = 0; j < 1; j++) {
-                Proxy[] proxySupplier = new Proxy[]{ProxyUtil.grabAvailableProxy(),ProxyUtil.grabAvailableProxy()};
-                CompletableFuture<Void> async = CompletableFuture.runAsync(() -> {
-                    int listNumber = 1;
-                    while (listNumber < 3) {
-                        VirtualBrowser v2 = new VirtualBrowser();
-                        v2.muteErrors();
-                        v2.setProxy(proxySupplier[listNumber-1]);
-                        if (v2.proxy == null) {
-                            System.out.println("No available proxy");
-                            return;
-                        }
-                        String token = getXCSRF_Token(v2);
-                        Main.threadSleep(3750);
+        VirtualBrowser v2 = new VirtualBrowser(); v2.muteErrors();
+        if (token == null) {getXCSRF_Token(v2);}
 
-                        for (int i = 0; i < 10; i++) {
-                            int finalI = i * listNumber;
-                            CompletableFuture.runAsync(() -> {
-                                LimitedPriceTracker.limitedToInfoMerge(Objects.requireNonNull(itemBulkToPriceRequest(listOfIDsLists.get(finalI), token, v2)));
-                            });
-                            Main.threadSleep(500);
-                        }
-                        ProxyUtil.freeProxy(v2.proxy, 60);
-                        listNumber++;
-                    }
-                });
-                asyncList.add(async);
-            }
-
-            for (CompletableFuture<Void> async : asyncList) {
-                try {
-                    CompletableFuture.anyOf(
-                            async,
-                            CompletableFuture.supplyAsync(() -> {
-                                try {
-                                    TimeUnit.SECONDS.sleep(30);
-                                } catch (InterruptedException e) {
-                                    // Ignore the interruption
-                                }
-                                return null;
-                            })
-                    ).get(30, TimeUnit.SECONDS);
-                } catch (InterruptedException | ExecutionException e) {
-                    // Handle exceptions, if any
-                } catch (TimeoutException e) {
-                    // Timeout reached, cancel the CompletableFuture
-                    async.cancel(true);
-                }
+        for (int i = 0; i < 10; i++) {
+            try {
+                LimitedPriceTracker.limitedToInfoMerge(Objects.requireNonNull(itemBulkToPriceRequest(listOfIDsLists.get(i), token, v2)));
+                Main.threadSleep(500);
+            } catch (Exception e) {
+                Main.threadSleep(5000);
+                token = getXCSRF_Token(v2);
             }
         }
     }
@@ -163,8 +128,8 @@ public class CatalogScanner {
                     "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
                     "  -H 'sec-fetch-dest: empty' \\\n" +
                     "  -H 'sec-fetch-mode: cors' \\\n" +
+                    "  -H 'cookie: " + Main.secCookie + "' \\\n" +
                     "  -H 'sec-fetch-site: same-site' \\\n" +
-                    "  -H 'user-agent: "+ userAgents[new Random().nextInt(0,userAgents.length)] +"' \\\n" +
                     "  --data-raw '" + payload + "' \\\n" +
                     "  --compressed", "  -H 'x-csrf-token: " + token + "' \\\n");
             CatalogSummary.count(120,ProxyUtil.getProxyCode(browser.proxy));
@@ -192,9 +157,9 @@ public class CatalogScanner {
                     "  -H 'sec-fetch-dest: document' \\\n" +
                     "  -H 'sec-fetch-mode: navigate' \\\n" +
                     "  -H 'sec-fetch-site: none' \\\n" +
+                    "  -H 'cookie: " + Main.secCookie + "' \\\n" +
                     "  -H 'sec-fetch-user: ?1' \\\n" +
                     "  -H 'upgrade-insecure-requests: 1' \\\n" +
-                    "  -H 'user-agent: "+ userAgents[new Random().nextInt(0,userAgents.length)] +"' \\\n" +
                     "  --compressed");
             return StringFilter.parseStringUsingRegex((String) tokenRequest.get("response"), "csrf-token\" data-token=\"(.*?)\""); // Remember it also saves cookies!
         } catch (IOException e) {
@@ -213,18 +178,4 @@ public class CatalogScanner {
             return itemToInfo(ID);
         }
     }
-
-    static final String[] userAgents = new String[]{
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36",
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36",
-            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36",
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:79.0) Gecko/20100101 Firefox/79.0",
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:79.0) Gecko/20100101 Firefox/79.0",
-            "Mozilla/5.0 (X11; Linux i686; rv:79.0) Gecko/20100101 Firefox/79.0",
-            "Mozilla/5.0 (iPhone; CPU iPhone OS 14_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1",
-            "Mozilla/5.0 (iPad; CPU OS 14_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1",
-            "Mozilla/5.0 (Windows NT 10.0; Trident/7.0; rv:11.0) like Gecko",
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36"
-    };
-
 }

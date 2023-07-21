@@ -1,13 +1,1 @@
-HTTP @ /102.212.91.56:6368 Server returned HTTP response code: 429 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /102.212.91.56:6368 Server returned HTTP response code: 429 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /102.212.91.56:6368 Server returned HTTP response code: 429 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /102.212.91.56:6368 Server returned HTTP response code: 429 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /102.212.91.56:6368 Server returned HTTP response code: 429 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /102.212.91.56:6368 Server returned HTTP response code: 429 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /102.212.91.56:6368 Server returned HTTP response code: 429 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /102.212.91.56:6368 Server returned HTTP response code: 429 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /102.212.91.56:6368 Server returned HTTP response code: 429 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /102.212.91.56:6368 Server returned HTTP response code: 429 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /104.238.4.109:5672 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /104.238.4.109:5672 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /104.238.4.109:5672 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+null Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
