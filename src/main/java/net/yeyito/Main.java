@@ -15,9 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Proxy;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static DiscordBot discordBot = new DiscordBot("MTA3MTExNzYzMjcyNTU5NDE4Mg.GVbLmT.gZBzQ6dteuapWbNa39cCOCklIirsOho6KUkBFA", Activity.playing("no games"));
@@ -32,10 +30,8 @@ public class Main {
         }
         System.out.println("Channel registered.");
 
-        while (true) {
-            LimitedTXTUpdater.updateLimitedsTXT();
-            LimitedPriceTracker.updatePrices();
-        }
+        LimitedTXTUpdater.updateLimitedsTXT();
+        LimitedPriceTracker.updatePrices();
     }
     public static int getDefaultRetryTime() {
         return 5000;

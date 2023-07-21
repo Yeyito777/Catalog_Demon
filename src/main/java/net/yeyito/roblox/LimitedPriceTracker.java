@@ -1,6 +1,7 @@
 package net.yeyito.roblox;
 
 import net.yeyito.Main;
+import net.yeyito.connections.ProxyUtil;
 import net.yeyito.util.TextFile;
 import net.yeyito.connections.DiscordBot;
 import org.json.JSONArray;
@@ -8,6 +9,7 @@ import org.json.JSONArray;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.Proxy;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -17,7 +19,6 @@ public class LimitedPriceTracker {
     //List<Object> = String name, Long Price, Long RAP, Long Original_Price, Long Quantity_Sold, JSONArray Price_Data_Points
 
     public static void updatePrices() {
-        shuffleLinesRetryable();
         Scanner scanner = scanLinesRetryable();
         List<Long> itemIDs = new ArrayList<Long>();
 
@@ -26,7 +27,13 @@ public class LimitedPriceTracker {
             itemIDs.add(Long.parseLong(line));
         }
         scanner.close();
-        CatalogScanner.itemBulkToPrice(itemIDs);
+        System.out.print("\n");
+
+        for (Proxy proxy : ProxyUtil.initAvailableProxies()) {
+            Runnable scan = new CatalogScanner(itemIDs,proxy);
+            Thread thread = new Thread(scan);
+            thread.start();
+        }
     }
     public static Scanner scanLinesRetryable() {
         try {
@@ -37,15 +44,7 @@ public class LimitedPriceTracker {
             return scanLinesRetryable();
         }
     }
-    public static void shuffleLinesRetryable() {
-        try {
-            new TextFile("src/main/resources/Limiteds.txt").shuffleLines();
-        } catch (IOException e) {
-            new TextFile("src/main/resources/StackTrace.txt").writeString("\ncould not shuffle the lines of src/main/resources/Limiteds.txt! error: "+ e.getMessage() + "\n");
-            Main.threadSleep(Main.getDefaultRetryTime());
-            shuffleLinesRetryable();
-        }
-    }
+
     public static void limitedToInfoMerge(HashMap<Long,List<Object>> newLimitedToInfo) {
         for (Long key : newLimitedToInfo.keySet()) {
             if (!LimitedToInfo.containsKey(key)) {LimitedToInfo.put(key,newLimitedToInfo.get(key));}
