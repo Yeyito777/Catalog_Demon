@@ -108,7 +108,7 @@ public class CatalogScanner implements Runnable {
             for (int i = 0; i < 10; i++) {
                 try {
                     LimitedPriceTracker.limitedToInfoMerge(Objects.requireNonNull(itemBulkToPriceRequest(listOfIDsLists.get(i), token, v2)));
-                    Main.threadSleep(6000);
+                    Main.threadSleep(5000);
                 } catch (Exception e) {
                     Main.threadSleep(5000);
                     token = getXCSRF_Token(v2);

@@ -1,107 +1,295 @@
-HTTP @ /209.242.203.232:6947 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.244:5985 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.67:5808 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.203.252:6967 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.133:6533 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.166:5907 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.203.250:6965 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.225:6625 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.203.52:6767 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.201.197:6243 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.201.134:6180 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.203.31:6746 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.203.24:6739 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.201.131:6177 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.185:5926 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.235:6635 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.88:5829 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.203.227:6942 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.233:5974 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.203.37:6752 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.16:5757 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.201.216:6262 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.201.63:6109 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.203.216:6931 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.201.208:6254 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.31:5772 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.11:6411 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.203.36:6751 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.203.195:6910 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.11:5752 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.201.143:6189 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.201.45:6091 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.112:6512 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.201.195:6241 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.90:6490 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.238:5979 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.44:5785 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.201.200:6246 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.203.143:6858 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.201.86:6132 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.250:6650 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.201.82:6128 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.69:6469 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.203.191:6906 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.233:6633 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.249:5990 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.108:5849 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.237:5978 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.203.19:6734 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.201.138:6184 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.49:6449 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.203.43:6758 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.14:6414 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.201.213:6259 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.203.55:6770 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.201.27:6073 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.201.92:6138 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.203.45:6760 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.240:6640 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.201.230:6276 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.61:6461 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.230:6630 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.201.43:6089 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.197:6243 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.56:6456 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.14:6414 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.143:5884 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.37:6752 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.44:5785 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.198:6598 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.203.62:6777 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.217:6617 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.187:5928 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.99:6814 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.36:6751 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.252:6967 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.43:6089 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.49:6449 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.138:6184 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.213:6259 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.250:6965 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.11:5752 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.18:6418 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.27:6073 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.36:5777 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.143:6858 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.55:5796 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.204.111:5852 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.193:6593 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.196:5937 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.204.128:5869 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.151:6551 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.240:6640 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.193:6593 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.250:6650 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.55:6770 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.230:6630 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.191:6906 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.227:6942 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.16:6416 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.52:6767 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.195:6910 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.11:6411 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.57:5798 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.90:6490 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.31:6431 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.208:6254 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.203:6603 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.155:6201 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.86:6132 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.188:5929 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.118:6164 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.19:6734 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.75:5816 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.238:5979 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.233:5974 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.233:6633 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.45:6760 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.237:5978 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.72:5813 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.179:6579 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.200:6246 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.31:5772 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.216:6931 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.63:6109 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.117:6832 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.152:6867 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.147:6547 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.204.213:5954 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.61:6461 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.159:6559 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.195:6241 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.216:6262 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.134:6180 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.45:6091 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.92:6138 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.88:5829 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.108:5849 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.43:6758 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.217:6617 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.133:6533 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.249:5990 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.82:6128 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.67:5808 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.133:5874 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.244:5985 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.31:6746 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.151:6551 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.126:6526 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.69:6469 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.16:5757 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.166:5907 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.232:6947 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.185:5926 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.174:6574 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.208:6608 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.112:6512 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.123:5864 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.131:6177 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.235:6635 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.24:6739 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.33:6433 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.225:6625 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.78:6793 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.16:6416 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.16:5757 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.45:6091 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.143:6189 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.82:6128 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.225:6625 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+
+ an item's price is null, voiding it! 
+HTTP @ /209.242.201.118:6164 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+
+ an item's price is null, voiding it! 
+HTTP @ /209.242.201.138:6184 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.188:5929 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.151:6551 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.230:6630 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.198:6598 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.233:6633 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.216:6262 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.69:6469 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.152:6867 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.55:6770 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.155:6201 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.111:5852 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.159:6559 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.43:6758 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.191:6906 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.238:5979 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.78:6793 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+
+ an item's price is null, voiding it! 
+HTTP @ /209.242.204.196:5937 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.174:6574 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.133:6533 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.33:6433 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.27:6073 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.208:6608 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.112:6512 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.233:5974 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.123:5864 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.250:6650 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.75:5816 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.235:6635 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.45:6760 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.232:6947 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.202.147:6547 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.202.203:6603 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.55:5796 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.143:5884 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.131:6177 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.204.187:5928 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.16:6416 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.123:5864 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.198:6598 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.174:6574 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.133:5874 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.33:6433 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.208:6608 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.159:6559 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.36:5777 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.75:5816 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.18:6418 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.188:5929 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.179:6579 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.196:5937 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.203.78:6793 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.203.117:6832 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.31:6431 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.57:5798 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.201.155:6201 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.126:6526 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.72:5813 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.202.56:6456 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.203.152:6867 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.201.118:6164 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.203.99:6814 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.204.237:5978 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.201.43:6089 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.62:6777 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.24:6739 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 
  an item's price is null, voiding it! 
+HTTP @ /209.242.204.31:5772 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.195:6910 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.179:6579 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.133:5874 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.18:6418 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.230:6276 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.117:6832 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.57:5798 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.88:5829 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.90:6490 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.240:6640 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.237:5978 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+
+ an item's price is null, voiding it! 
+HTTP @ /209.242.201.43:6089 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.185:5926 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.227:6942 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.134:6180 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.11:5752 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.200:6246 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.52:6767 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+
+ an item's price is null, voiding it! 
+HTTP @ /209.242.201.63:6109 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.213:6259 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.197:6243 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.244:5985 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.195:6241 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.128:5869 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.108:5849 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.67:5808 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.126:6526 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.19:6734 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.143:5884 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+
+ an item's price is null, voiding it! 
+HTTP @ /209.242.201.208:6254 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.55:5796 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.213:5954 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+
+ an item's price is null, voiding it! 
+HTTP @ /209.242.204.166:5907 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.82:6128 Server returned HTTP response code: 502 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.99:6814 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.36:5777 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.11:6411 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+
+ an item's price is null, voiding it! 
+HTTP @ /209.242.202.31:6431 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.49:6449 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.193:6593 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.86:6132 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.36:6751 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.61:6461 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.250:6965 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.31:6746 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.217:6617 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.44:5785 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+
+ an item's price is null, voiding it! 
+HTTP @ /209.242.204.249:5990 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.143:6858 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.92:6138 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+
+ an item's price is null, voiding it! 
+HTTP @ /209.242.202.56:6456 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.216:6931 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.72:5813 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.37:6752 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.14:6414 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.252:6967 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+
+ an item's price is null, voiding it! 
+
+ an item's price is null, voiding it! 
+
+ an item's price is null, voiding it! 
+HTTP @ /209.242.202.16:6416 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.16:5757 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.45:6091 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.143:6189 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.225:6625 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.82:6128 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.118:6164 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.138:6184 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.188:5929 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.151:6551 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.230:6630 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.198:6598 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.233:6633 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.216:6262 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.69:6469 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.152:6867 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.55:6770 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.155:6201 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.111:5852 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.159:6559 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.43:6758 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.191:6906 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.238:5979 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.78:6793 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.196:5937 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+
+ an item's price is null, voiding it! 
+HTTP @ /209.242.202.174:6574 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.133:6533 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.33:6433 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.27:6073 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.208:6608 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.233:5974 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.112:6512 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.123:5864 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.250:6650 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.75:5816 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.235:6635 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+
+ an item's price is null, voiding it! 
+HTTP @ /209.242.203.45:6760 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.232:6947 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.147:6547 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.203:6603 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.131:6177 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.187:5928 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.62:6777 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.24:6739 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.31:5772 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.195:6910 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.179:6579 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.133:5874 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.18:6418 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+
+ an item's price is null, voiding it! 
+HTTP @ /209.242.201.230:6276 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.117:6832 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.57:5798 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.88:5829 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.90:6490 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.240:6640 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.237:5978 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.201.43:6089 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.204.185:5926 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.203.227:6942 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 
@@ -110,14 +298,14 @@ HTTP @ /209.242.201.134:6180 Server returned HTTP response code: 403 for URL: ht
 HTTP @ /209.242.204.11:5752 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.201.200:6246 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.203.52:6767 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+
+ an item's price is null, voiding it! 
 HTTP @ /209.242.201.63:6109 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.201.213:6259 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.201.197:6243 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.204.244:5985 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.201.195:6241 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.204.128:5869 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-
- an item's price is null, voiding it! 
 HTTP @ /209.242.204.108:5849 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.204.67:5808 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.202.126:6526 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
@@ -125,10 +313,8 @@ HTTP @ /209.242.203.19:6734 Server returned HTTP response code: 403 for URL: htt
 HTTP @ /209.242.204.143:5884 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.201.208:6254 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.204.55:5796 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-
- an item's price is null, voiding it! 
-HTTP @ /209.242.204.213:5954 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.204.166:5907 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.213:5954 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.203.99:6814 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.204.36:5777 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.202.11:6411 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
@@ -137,14 +323,23 @@ HTTP @ /209.242.202.49:6449 Server returned HTTP response code: 403 for URL: htt
 HTTP @ /209.242.202.193:6593 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.201.86:6132 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.203.36:6751 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+
+ an item's price is null, voiding it! 
 HTTP @ /209.242.202.61:6461 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.203.250:6965 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.202.217:6617 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.203.31:6746 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.204.44:5785 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
-HTTP @ /209.242.203.143:6858 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.204.249:5990 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.143:6858 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.201.92:6138 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.202.56:6456 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.203.216:6931 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
 HTTP @ /209.242.204.72:5813 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.37:6752 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+
+ an item's price is null, voiding it! 
+HTTP @ /209.242.202.14:6414 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.203.252:6967 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.202.16:6416 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
+HTTP @ /209.242.204.16:5757 Server returned HTTP response code: 403 for URL: https://catalog.roblox.com/v1/catalog/items/details
