@@ -29,8 +29,8 @@ public class LimitedPriceTracker {
         scanner.close();
         System.out.print("\n");
 
-        for (Proxy proxy : ProxyUtil.initAvailableProxies()) {
-            Runnable scan = new CatalogScanner(itemIDs,proxy);
+        for (String secCookie : Main.secCookies) {
+            Runnable scan = new CatalogScanner(itemIDs,secCookie);
             Thread thread = new Thread(scan);
             thread.start();
         }

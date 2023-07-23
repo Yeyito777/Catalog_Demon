@@ -71,12 +71,12 @@ public class CatalogScanner implements Runnable {
 
     String token = null;
     List<Long> IDs;
-    Proxy proxy;
+    String secCookie;
     Integer color_ID;
 
-    public CatalogScanner(List<Long> IDs, Proxy proxy) {
+    public CatalogScanner(List<Long> IDs, String secCookie) {
         this.IDs = IDs;
-        this.proxy = proxy;
+        this.secCookie = secCookie;
         this.color_ID = new Random().nextInt(256,65536);
     }
 
@@ -102,13 +102,13 @@ public class CatalogScanner implements Runnable {
                 listOfIDsLists.add(listOfIDs);
             }
 
-            VirtualBrowser v2 = new VirtualBrowser(); v2.muteErrors(); v2.setProxy(this.proxy);
+            VirtualBrowser v2 = new VirtualBrowser(); v2.muteErrors();
             if (token == null) {getXCSRF_Token(v2); Main.threadSleep(new Random().nextInt(0,6000));}
 
             for (int i = 0; i < 10; i++) {
                 try {
                     LimitedPriceTracker.limitedToInfoMerge(Objects.requireNonNull(itemBulkToPriceRequest(listOfIDsLists.get(i), token, v2)));
-                    Main.threadSleep(5000);
+                    Main.threadSleep(500);
                 } catch (Exception e) {
                     Main.threadSleep(5000);
                     token = getXCSRF_Token(v2);
@@ -117,7 +117,7 @@ public class CatalogScanner implements Runnable {
         }
     }
 
-    public static HashMap<Long,List<Object>> itemBulkToPriceRequest(List<Long> IDs, String token, VirtualBrowser browser) {
+    public HashMap<Long,List<Object>> itemBulkToPriceRequest(List<Long> IDs, String token, VirtualBrowser browser) {
         try {
             StringBuilder payload = new StringBuilder();
             payload.append("{\"items\":[");
@@ -142,10 +142,11 @@ public class CatalogScanner implements Runnable {
                     "  -H 'sec-fetch-dest: empty' \\\n" +
                     "  -H 'sec-fetch-mode: cors' \\\n" +
                     "  -H 'sec-fetch-site: same-site' \\\n" +
+                    "  -H 'cookie: " + this.secCookie + "' \\\n" +
                     "  -H 'user-agent: "+ userAgents[new Random().nextInt(0,userAgents.length)] +"' \\\n" +
                     "  --data-raw '" + payload + "' \\\n" +
                     "  --compressed", "  -H 'x-csrf-token: " + token + "' \\\n");
-            CatalogSummary.count(120,ProxyUtil.getProxyCode(browser.proxy));
+            CatalogSummary.count(120,this.color_ID);
             new TextFile("src/main/resources/Logs/ProxyLogs.txt").writeString(".");
 
             return JSON.itemBatchStringToHashMap(itemsResponse.get("response").toString());
@@ -157,7 +158,7 @@ public class CatalogScanner implements Runnable {
         }
     }
 
-    public static String getXCSRF_Token(VirtualBrowser browser) {
+    public String getXCSRF_Token(VirtualBrowser browser) {
         new TextFile("src/main/resources/Logs/ProxyLogs.txt").writeString("\nUsing Proxy: " + browser.proxy);
         try {
             HashMap<String, Object> tokenRequest = browser.curlToOpenWebsite("curl 'https://www.roblox.com/catalog?Category=1&salesTypeFilter=2' \\\n" +
@@ -172,6 +173,7 @@ public class CatalogScanner implements Runnable {
                     "  -H 'sec-fetch-site: none' \\\n" +
                     "  -H 'sec-fetch-user: ?1' \\\n" +
                     "  -H 'upgrade-insecure-requests: 1' \\\n" +
+                    "  -H 'cookie: " + this.secCookie + "' \\\n" +
                     "  -H 'user-agent: "+ userAgents[new Random().nextInt(0,userAgents.length)] +"' \\\n" +
                     "  --compressed");
             return StringFilter.parseStringUsingRegex((String) tokenRequest.get("response"), "csrf-token\" data-token=\"(.*?)\""); // Remember it also saves cookies!
