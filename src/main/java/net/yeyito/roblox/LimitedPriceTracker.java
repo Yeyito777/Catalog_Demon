@@ -29,10 +29,16 @@ public class LimitedPriceTracker {
         scanner.close();
         System.out.print("\n");
 
-        for (String secCookie : Main.secCookies) {
-            Runnable scan = new CatalogScanner(itemIDs,secCookie);
-            Thread thread = new Thread(scan);
-            thread.start();
+        for (Proxy proxy : ProxyUtil.initAvailableProxies()) {
+            if (proxy == null) {
+                Runnable scan = new CatalogScanner(itemIDs, Main.secCookie);
+                Thread thread = new Thread(scan);
+                thread.start();
+            } else {
+                Runnable scan = new CatalogScanner(itemIDs, proxy);
+                Thread thread = new Thread(scan);
+                thread.start();
+            }
         }
     }
     public static Scanner scanLinesRetryable() {
@@ -45,7 +51,7 @@ public class LimitedPriceTracker {
         }
     }
 
-    public static void limitedToInfoMerge(HashMap<Long,List<Object>> newLimitedToInfo) {
+    synchronized public static void limitedToInfoMerge(HashMap<Long,List<Object>> newLimitedToInfo) {
         for (Long key : newLimitedToInfo.keySet()) {
             if (!LimitedToInfo.containsKey(key)) {LimitedToInfo.put(key,newLimitedToInfo.get(key));}
             else {

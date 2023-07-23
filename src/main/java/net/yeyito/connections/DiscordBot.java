@@ -28,6 +28,7 @@ public class DiscordBot extends ListenerAdapter {
     public static final String High_Role = "<@&1086796391361298472>";
     public static final String Extreme_Role = "<@&1086796484596469880>";
     public static final String Ludicrous_Role = "<@&1086796519048482996>";
+    public static boolean registered = false;
     public DiscordBot(String token, @Nullable Activity activity) {
         this.jda = JDABuilder.createDefault(token).setActivity(activity)
                 .setEventPassthrough(true)
@@ -73,8 +74,11 @@ class Commands {
         // Deprecated, use webhooks instead.
         if (args.length > 1) {event.getChannel().sendMessage("Invalid syntax!").queue();}
         else {
-            Main.discordBot.registeredTextChannels.add(event.getMessage().getChannel().asTextChannel());
-            event.getMessage().getChannel().sendMessage(event.getMessage().getChannel().asTextChannel().getName() + " is now visible to Yeyito!").queue();
+            if (!DiscordBot.registered) {
+                DiscordBot.registered = true;
+                Main.discordBot.registeredTextChannels.add(event.getMessage().getChannel().asTextChannel());
+                event.getMessage().getChannel().sendMessage(event.getMessage().getChannel().asTextChannel().getName() + " is now visible to Yeyito!").queue();
+            }
         }
     }
 }

@@ -3,12 +3,14 @@ package net.yeyito.roblox;
 import com.beust.jcommander.internal.Nullable;
 import net.yeyito.Main;
 import net.yeyito.connections.ProxyUtil;
+import net.yeyito.util.DeltaTime;
 import net.yeyito.util.StringFilter;
 import net.yeyito.VirtualBrowser;
 import net.yeyito.util.JSON;
 import net.yeyito.util.TextFile;
 
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.time.Instant;
 import java.util.*;
@@ -31,6 +33,7 @@ public class CatalogScanner implements Runnable {
         static long endTime;
         static Date startDate;
         static long itemsScanned = 0;
+        static HashMap<Proxy, List<Double>> proxyQualityHashMap = new HashMap<>();
 
         public static void init() {
             startTime = System.nanoTime();
@@ -40,11 +43,28 @@ public class CatalogScanner implements Runnable {
             endTime = System.nanoTime();
             int seconds = (int) ((endTime - startTime)/1e+9);
             int itemsScannedPerSecond = (int) (itemsScanned / seconds);
-            System.out.print("\n\u001B[34m" + "CATALOG SCANNER SUMMARY:\n" + " Start Date: " + startDate + "\n End Date: " + Date.from(Instant.now()) + "\n Items Scanned: " + itemsScanned +
-                    "\n Items Scanned Per Second: " + itemsScannedPerSecond + "\u001B[0m");
+            new TextFile("src/main/resources/Logs/ProxyLogs.txt").writeString("\n" + proxyMapToString(proxyQualityHashMap));
+            System.out.print("\n\u001B[34m" + "CATALOG SCANNER SUMMARY:\n"
+                    + " Start Date: " + startDate
+                    + "\n End Date: " + Date.from(Instant.now())
+                    + "\n Items Scanned: " + itemsScanned
+                    + "\n Items Scanned Per Second: " + itemsScannedPerSecond
+                    + "\n Average Network Quality: " + String.format("%.1f", calculateAverageQuality(proxyQualityHashMap)) + "ms"
+                    + "\u001B[0m");
+
         }
 
-        public static void count(int number,Integer id) {
+        public static void count(int number,Integer id,Double deltaTime) {
+            Proxy proxyFromID = ProxyUtil.getProxyFromCode(id);
+            if (proxyFromID == null) {proxyFromID = new Proxy(Proxy.Type.HTTP,new InetSocketAddress("1",1));}
+            if (!proxyQualityHashMap.containsKey(proxyFromID)) {
+                List<Double> times = new ArrayList<>();
+                times.add(deltaTime);
+                proxyQualityHashMap.put(proxyFromID,times);
+            } else {
+                proxyQualityHashMap.get(proxyFromID).add(deltaTime);
+            }
+
             itemsScanned = itemsScanned+number;
 
             if (indexDot % 140 == 0 && indexDot != 0) {System.out.print("\n");}
@@ -67,17 +87,61 @@ public class CatalogScanner implements Runnable {
             indexDot++;
             System.out.print("*");
         }
+
+        public static String proxyMapToString(HashMap<Proxy, List<Double>> map) {
+            StringBuilder sb = new StringBuilder();
+            for (Map.Entry<Proxy, List<Double>> entry : map.entrySet()) {
+                InetSocketAddress addr = (InetSocketAddress) entry.getKey().address();
+                String ip = addr.getAddress().getHostAddress();
+                int port = addr.getPort();
+
+                List<Double> list = entry.getValue();
+                double sum = 0;
+                for (Double d : list) {sum += d;}
+
+                double average = sum / list.size();
+                String formattedAverage = String.format("%.1f", average) + "ms";
+                sb.append(ip).append(":").append(port).append(" = ").append(formattedAverage).append("\n");
+            }
+            return sb.toString();
+        }
+
+        public static double calculateAverageQuality(HashMap<Proxy, List<Double>> map) {
+            double totalSum = 0;
+            int totalCount = 0;
+
+            for (List<Double> list : map.values()) {
+                for (Double d : list) {
+                    totalSum += d;
+                    totalCount++;
+                }
+            }
+
+            return totalCount != 0 ? totalSum / totalCount : 0;
+        }
     }
 
     String token = null;
     List<Long> IDs;
-    String secCookie;
+    String secCookie = ".ROBLOSECURITY=_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_";
     Integer color_ID;
+    Proxy proxy;
+    int inBetweenWaitTime = 5000;
+
+    public CatalogScanner(List<Long> IDs, Proxy proxy) {
+        this.IDs = IDs;
+        this.secCookie = this.secCookie + new Random().nextInt(1000,9999);
+        this.proxy = proxy;
+        this.color_ID = new Random().nextInt(256,65536);
+        ProxyUtil.setProxyCode(this.proxy,color_ID);
+    }
 
     public CatalogScanner(List<Long> IDs, String secCookie) {
         this.IDs = IDs;
         this.secCookie = secCookie;
-        this.color_ID = new Random().nextInt(256,65536);
+        this.inBetweenWaitTime = 500;
+        this.color_ID = new Random().nextInt(256,262144);
+        ProxyUtil.setProxyCode(this.proxy,color_ID);
     }
 
     @Override
@@ -102,13 +166,14 @@ public class CatalogScanner implements Runnable {
                 listOfIDsLists.add(listOfIDs);
             }
 
-            VirtualBrowser v2 = new VirtualBrowser(); v2.muteErrors();
+            VirtualBrowser v2 = new VirtualBrowser(); v2.muteErrors(); v2.setProxy(this.proxy);
             if (token == null) {getXCSRF_Token(v2); Main.threadSleep(new Random().nextInt(0,6000));}
 
             for (int i = 0; i < 10; i++) {
                 try {
+                    DeltaTime.start(this.color_ID);
                     LimitedPriceTracker.limitedToInfoMerge(Objects.requireNonNull(itemBulkToPriceRequest(listOfIDsLists.get(i), token, v2)));
-                    Main.threadSleep(500);
+                    Main.threadSleep(this.inBetweenWaitTime);
                 } catch (Exception e) {
                     Main.threadSleep(5000);
                     token = getXCSRF_Token(v2);
@@ -146,7 +211,7 @@ public class CatalogScanner implements Runnable {
                     "  -H 'user-agent: "+ userAgents[new Random().nextInt(0,userAgents.length)] +"' \\\n" +
                     "  --data-raw '" + payload + "' \\\n" +
                     "  --compressed", "  -H 'x-csrf-token: " + token + "' \\\n");
-            CatalogSummary.count(120,this.color_ID);
+            CatalogSummary.count(120,this.color_ID,DeltaTime.stop(this.color_ID)*1000);
             new TextFile("src/main/resources/Logs/ProxyLogs.txt").writeString(".");
 
             return JSON.itemBatchStringToHashMap(itemsResponse.get("response").toString());

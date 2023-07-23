@@ -34,7 +34,8 @@ public class ProxyUtil {
                 String[] parts = line.split(":");
                 String ip = parts[0];
                 int port = Integer.parseInt(parts[1]);
-                list.add(httpProxy(ip, port));
+                if (Objects.equals(ip, "1") && port == 1) {list.add(null);} else
+                {list.add(httpProxy(ip, port));}
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -55,6 +56,19 @@ public class ProxyUtil {
         if (proxyCodes.containsKey(proxy)) {return proxyCodes.get(proxy);}
         proxyCodes.put(proxy,new Random().nextInt(0,100000000));
         return getProxyCode(proxy);
+    }
+
+    public static void setProxyCode(Proxy proxy, Integer code) {
+        proxyCodes.put(proxy,code);
+    }
+
+    public static Proxy getProxyFromCode(Integer code) {
+        for (Proxy proxy : proxyCodes.keySet()) {
+            if (Objects.equals(proxyCodes.get(proxy), code)) {
+                return proxy;
+            }
+        }
+        return null;
     }
 
     public static void freeProxy(Proxy proxy, int seconds) {
