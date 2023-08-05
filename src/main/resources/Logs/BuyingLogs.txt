@@ -1,0 +1,559 @@
+
+-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+{
+	Found buying candidate:3798251754
+	Expected Price: 10
+	Product ID: 714975448
+	Token: 0VSQKfUBOn+a
+	Expected Price: 78
+	Seller ID: 1180835195
+	Expected Currency: 1
+	User Asset ID: 45844128908
+	User Robux: 5365
+	Average Variance: 0.058225989977428005
+	Average Price Last 30 Days: 72.0
+	Average Price Last 90 Days: 81.6
+	Average Price Last 180 Days: 93.48333333333333
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 78
+	Expected Price: 10
+}
+{
+	Found buying candidate:3798251754
+	Expected Price: 10
+	Product ID: 714975448
+	Token: 0VSQKfUBOn+a
+	Expected Price: 78
+	Seller ID: 1180835195
+	Expected Currency: 1
+	User Asset ID: 45844128908
+	User Robux: 5365
+	Average Variance: 0.058225989977428005
+	Average Price Last 30 Days: 72.0
+	Average Price Last 90 Days: 81.6
+	Average Price Last 180 Days: 93.48333333333333
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 78
+	Expected Price: 10
+}
+-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+{
+	Found buying candidate:4773591735
+	Expected Price: 40
+	Product ID: 971141814
+	Token: hC363IGRmy45
+	Expected Price: 40
+	Seller ID: 2736666
+	Expected Currency: 1
+	User Asset ID: 60207995035
+	User Robux: 5365
+	Average Variance: 0.07171596078334441
+	Average Price Last 30 Days: 85.66666666666667
+	Average Price Last 90 Days: 88.6
+	Average Price Last 180 Days: 88.13888888888889
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 40
+	Expected Price: 40
+}
+{
+	Found buying candidate:3581868178
+	Expected Price: 40
+	Product ID: 646371620
+	Token: hC363IGRmy45
+	Expected Price: 98
+	Seller ID: 2434746022
+	Expected Currency: 1
+	User Asset ID: 43829388027
+	User Robux: 5365
+	Average Variance: 0.05032965820142996
+	Average Price Last 30 Days: 89.4
+	Average Price Last 90 Days: 101.0111111111111
+	Average Price Last 180 Days: 123.33333333333333
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 98
+	Expected Price: 40
+}
+{
+	Found buying candidate:3798231832
+	Expected Price: 50
+	Product ID: 714971020
+	Token: hC363IGRmy45
+	Expected Price: 100
+	Seller ID: 2563606660
+	Expected Currency: 1
+	User Asset ID: 46211884977
+	User Robux: 5365
+	Average Variance: 0.06277027047889543
+	Average Price Last 30 Days: 108.36666666666666
+	Average Price Last 90 Days: 116.5111111111111
+	Average Price Last 180 Days: 152.75
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 100
+	Expected Price: 50
+}
+{
+	Found buying candidate:1556204905
+	Expected Price: 75
+	Product ID: 174528051
+	Token: U3x2w1uHa2xn
+	Expected Price: 75
+	Seller ID: 2434746022
+	Expected Currency: 1
+	User Asset ID: 19909683306
+	User Robux: 5365
+	Average Variance: 0.08882645603210368
+	Average Price Last 30 Days: 77.8
+	Average Price Last 90 Days: 87.1
+	Average Price Last 180 Days: 87.93888888888888
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 75
+	Expected Price: 75
+}
+{
+	Found buying candidate:1556204905
+	Expected Price: 78
+	Product ID: 174528051
+	Token: U3x2w1uHa2xn
+	Expected Price: 78
+	Seller ID: 2434746022
+	Expected Currency: 1
+	User Asset ID: 19897484277
+	User Robux: 5365
+	Average Variance: 0.08882645603210368
+	Average Price Last 30 Days: 77.8
+	Average Price Last 90 Days: 87.1
+	Average Price Last 180 Days: 87.93888888888888
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 78
+	Expected Price: 78
+}
+{
+	Found buying candidate:2528067691
+	Expected Price: 69
+	Product ID: 413685530
+	Token: 3IxRnhTZE6Jc
+	Expected Price: 69
+	Seller ID: 503059089
+	Expected Currency: 1
+	User Asset ID: 49341885031
+	User Robux: 5365
+	Average Variance: 0.07430087483247919
+	Average Price Last 30 Days: 74.9
+	Average Price Last 90 Days: 79.43333333333334
+	Average Price Last 180 Days: 90.75
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 69
+	Expected Price: 69
+}
+{
+	Found buying candidate:2528067691
+	Expected Price: 70
+	Product ID: 413685530
+	Token: 3IxRnhTZE6Jc
+	Expected Price: 70
+	Seller ID: 450594841
+	Expected Currency: 1
+	User Asset ID: 48928820957
+	User Robux: 5365
+	Average Variance: 0.07430087483247919
+	Average Price Last 30 Days: 74.9
+	Average Price Last 90 Days: 79.43333333333334
+	Average Price Last 180 Days: 90.75
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 70
+	Expected Price: 70
+}
+{
+	Found buying candidate:51245277
+	Expected Price: 6666
+	Product ID: 8231769
+	Token: QcU9H/5DW3ev
+	Expected Price: 6666
+	Seller ID: 1449348944
+	Expected Currency: 1
+	User Asset ID: 557325802
+	User Robux: 5365
+	[FAIL BUYMODEL]
+	Detected Price: 6666
+	Expected Price: 6666
+}
+{
+	Found buying candidate:4771699155
+	Expected Price: 64
+	Product ID: 971141789
+	Token: pRU5CmXllcwr
+	Expected Price: 64
+	Seller ID: 555636491
+	Expected Currency: 1
+	User Asset ID: 60210023805
+	User Robux: 5365
+	Average Variance: 0.07335848282568953
+	Average Price Last 30 Days: 70.9
+	Average Price Last 90 Days: 78.06666666666666
+	Average Price Last 180 Days: 82.80555555555556
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 64
+	Expected Price: 64
+}
+{
+	Found buying candidate:4771699155
+	Expected Price: 65
+	Product ID: 971141789
+	Token: pRU5CmXllcwr
+	Expected Price: 65
+	Seller ID: 2866483204
+	Expected Currency: 1
+	User Asset ID: 60115685189
+	User Robux: 5365
+	Average Variance: 0.07335848282568953
+	Average Price Last 30 Days: 70.9
+	Average Price Last 90 Days: 78.06666666666666
+	Average Price Last 180 Days: 82.80555555555556
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 65
+	Expected Price: 65
+}
+{
+	Found buying candidate:4771699155
+	Expected Price: 60
+	Product ID: 971141789
+	Token: pRU5CmXllcwr
+	Expected Price: 60
+	Seller ID: 1438652524
+	Expected Currency: 1
+	User Asset ID: 59888855650
+	User Robux: 5365
+	Average Variance: 0.07335848282568953
+	Average Price Last 30 Days: 70.9
+	Average Price Last 90 Days: 78.06666666666666
+	Average Price Last 180 Days: 82.80555555555556
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 60
+	Expected Price: 60
+}
+{
+	Found buying candidate:4771699155
+	Expected Price: 65
+	Product ID: 971141789
+	Token: pRU5CmXllcwr
+	Expected Price: 65
+	Seller ID: 2866483204
+	Expected Currency: 1
+	User Asset ID: 60464782844
+	User Robux: 5365
+	Average Variance: 0.07335848282568953
+	Average Price Last 30 Days: 70.9
+	Average Price Last 90 Days: 78.06666666666666
+	Average Price Last 180 Days: 82.80555555555556
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 65
+	Expected Price: 65
+}
+{
+	Found buying candidate:4771699155
+	Expected Price: 64
+	Product ID: 971141789
+	Token: pRU5CmXllcwr
+	Expected Price: 64
+	Seller ID: 284309030
+	Expected Currency: 1
+	User Asset ID: 59885327323
+	User Robux: 5365
+	Average Variance: 0.07335848282568953
+	Average Price Last 30 Days: 70.9
+	Average Price Last 90 Days: 78.06666666666666
+	Average Price Last 180 Days: 82.80555555555556
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 64
+	Expected Price: 64
+}
+{
+	Found buying candidate:4771699155
+	Expected Price: 65
+	Product ID: 971141789
+	Token: pRU5CmXllcwr
+	Expected Price: 65
+	Seller ID: 2866483204
+	Expected Currency: 1
+	User Asset ID: 60464782844
+	User Robux: 5365
+	Average Variance: 0.07335848282568953
+	Average Price Last 30 Days: 70.9
+	Average Price Last 90 Days: 78.06666666666666
+	Average Price Last 180 Days: 82.80555555555556
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 65
+	Expected Price: 65
+}
+{
+	Found buying candidate:1556204905
+	Expected Price: 75
+	Product ID: 174528051
+	Token: 3/2+4qOyhMHG
+	Expected Price: 75
+	Seller ID: 3242949311
+	Expected Currency: 1
+	User Asset ID: 19951539076
+	User Robux: 5365
+	Average Variance: 0.08882645603210368
+	Average Price Last 30 Days: 77.8
+	Average Price Last 90 Days: 87.1
+	Average Price Last 180 Days: 87.93888888888888
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 75
+	Expected Price: 75
+}
+{
+	Found buying candidate:1556204905
+	Expected Price: 80
+	Product ID: 174528051
+	Token: 3/2+4qOyhMHG
+	Expected Price: 80
+	Seller ID: 194033768
+	Expected Currency: 1
+	User Asset ID: 19890520592
+	User Robux: 5365
+	Average Variance: 0.08882645603210368
+	Average Price Last 30 Days: 77.8
+	Average Price Last 90 Days: 87.1
+	Average Price Last 180 Days: 87.93888888888888
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 80
+	Expected Price: 80
+}
+{
+	Found buying candidate:1556204905
+	Expected Price: 85
+	Product ID: 174528051
+	Token: 3/2+4qOyhMHG
+	Expected Price: 85
+	Seller ID: 263230726
+	Expected Currency: 1
+	User Asset ID: 19942828141
+	User Robux: 5365
+	Average Variance: 0.08882645603210368
+	Average Price Last 30 Days: 77.8
+	Average Price Last 90 Days: 87.1
+	Average Price Last 180 Days: 87.93888888888888
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 85
+	Expected Price: 85
+}
+{
+	Found buying candidate:1556204905
+	Expected Price: 90
+	Product ID: 174528051
+	Token: 3/2+4qOyhMHG
+	Expected Price: 90
+	Seller ID: 291158863
+	Expected Currency: 1
+	User Asset ID: 19985038246
+	User Robux: 5365
+	Average Variance: 0.08882645603210368
+	Average Price Last 30 Days: 77.8
+	Average Price Last 90 Days: 87.1
+	Average Price Last 180 Days: 87.93888888888888
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 90
+	Expected Price: 90
+}
+{
+	Found buying candidate:1556204905
+	Expected Price: 98
+	Product ID: 174528051
+	Token: 3/2+4qOyhMHG
+	Expected Price: 98
+	Seller ID: 1377352311
+	Expected Currency: 1
+	User Asset ID: 19939972129
+	User Robux: 5365
+	Average Variance: 0.08882645603210368
+	Average Price Last 30 Days: 77.8
+	Average Price Last 90 Days: 87.1
+	Average Price Last 180 Days: 87.93888888888888
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 98
+	Expected Price: 98
+}
+{
+	Found buying candidate:1556204905
+	Expected Price: 97
+	Product ID: 174528051
+	Token: 3/2+4qOyhMHG
+	Expected Price: 97
+	Seller ID: 2815347351
+	Expected Currency: 1
+	User Asset ID: 19871352994
+	User Robux: 5365
+	Average Variance: 0.08882645603210368
+	Average Price Last 30 Days: 77.8
+	Average Price Last 90 Days: 87.1
+	Average Price Last 180 Days: 87.93888888888888
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 97
+	Expected Price: 97
+}
+{
+	Found buying candidate:1556204905
+	Expected Price: 65
+	Product ID: 174528051
+	Token: vgI/DZDeLd7B
+	Expected Price: 65
+	Seller ID: 189266689
+	Expected Currency: 1
+	User Asset ID: 19873998294
+	User Robux: 5365
+	Average Variance: 0.08882645603210368
+	Average Price Last 30 Days: 77.8
+	Average Price Last 90 Days: 87.1
+	Average Price Last 180 Days: 87.93888888888888
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 65
+	Expected Price: 65
+}
+{
+	Found buying candidate:1556204905
+	Expected Price: 97
+	Product ID: 174528051
+	Token: vgI/DZDeLd7B
+	Expected Price: 97
+	Seller ID: 2815347351
+	Expected Currency: 1
+	User Asset ID: 19877851447
+	User Robux: 5365
+	Average Variance: 0.08882645603210368
+	Average Price Last 30 Days: 77.8
+	Average Price Last 90 Days: 87.1
+	Average Price Last 180 Days: 87.93888888888888
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 97
+	Expected Price: 97
+}
+{
+	Found buying candidate:1556204905
+	Expected Price: 60
+	Product ID: 174528051
+	Token: vgI/DZDeLd7B
+	Expected Price: 60
+	Seller ID: 539409958
+	Expected Currency: 1
+	User Asset ID: 19881595485
+	User Robux: 5365
+	Average Variance: 0.08882645603210368
+	Average Price Last 30 Days: 77.8
+	Average Price Last 90 Days: 87.1
+	Average Price Last 180 Days: 87.93888888888888
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 60
+	Expected Price: 60
+}
+-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+{
+	Found buying candidate:4786869155
+	Expected Price: 72
+	Product ID: 971141818
+	Token: gQmuozxUHGUh
+	Expected Price: 72
+	Seller ID: 96646713
+	Expected Currency: 1
+	User Asset ID: 60049538512
+	User Robux: 5365
+	Average Variance: 0.07997616413468206
+	Average Price Last 30 Days: 75.5
+	Average Price Last 90 Days: 91.25555555555556
+	Average Price Last 180 Days: 101.7
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 72
+	Expected Price: 72
+}
+{
+	Found buying candidate:9731869178
+	Expected Price: 300
+	Product ID: 1267398476
+	Token: 1lpFpTt05loz
+	Expected Price: 300
+	Seller ID: 2510745075
+	Expected Currency: 1
+	User Asset ID: 157115762763
+	User Robux: 5365
+	Average Variance: 0.06582744551288236
+	Average Price Last 30 Days: 268.8
+	Average Price Last 90 Days: 274.0888888888889
+	Average Price Last 180 Days: 336.9
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 300
+	Expected Price: 300
+}
+{
+	Found buying candidate:4773579034
+	Expected Price: 30
+	Product ID: 971141800
+	Token: oMaca49zP8Km
+	Expected Price: 89
+	Seller ID: 127519
+	Expected Currency: 1
+	User Asset ID: 60030825251
+	User Robux: 5365
+	Average Variance: 0.05638391292314187
+	Average Price Last 30 Days: 99.86666666666666
+	Average Price Last 90 Days: 98.28888888888889
+	Average Price Last 180 Days: 96.2611111111111
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 89
+	Expected Price: 30
+}
+{
+	Found buying candidate:3798243238
+	Expected Price: 110
+	Product ID: 714973246
+	Token: QpICtVCtRUd6
+	Expected Price: 110
+	Seller ID: 1013973903
+	Expected Currency: 1
+	User Asset ID: 45992111792
+	User Robux: 5365
+	Average Variance: 0.05620894978801564
+	Average Price Last 30 Days: 92.1
+	Average Price Last 90 Days: 100.21111111111111
+	Average Price Last 180 Days: 127.58888888888889
+	Passed Check #1
+	[FAIL BUYMODEL]
+	Detected Price: 110
+	Expected Price: 110
+}

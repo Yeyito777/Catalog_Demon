@@ -2,6 +2,7 @@ package net.yeyito.roblox;
 
 import net.yeyito.Main;
 import net.yeyito.connections.ProxyUtil;
+import net.yeyito.util.DeltaTime;
 import net.yeyito.util.TextFile;
 import net.yeyito.connections.DiscordBot;
 import org.json.JSONArray;
@@ -81,18 +82,16 @@ public class LimitedPriceTracker {
                     // Instantaneous buy function
                     try {
                         if ((Long) newLimitedToInfo.get(key).get(1) < 21) {
-                            ItemManager.buyItem(key,null);
+                            ItemManager.buyItem(key,null, (Long) newLimitedToInfo.get(key).get(1));
                         }} catch (Exception e) {e.printStackTrace();}
-
                     // Item data
                     for (Object o: Objects.requireNonNull(CatalogScanner.itemToInfo(key))) {
                         newLimitedToInfo.get(key).add(o);
                     }
-
                     // Informed buy function
                     try {
                         if ((Long) newLimitedToInfo.get(key).get(1) < (Integer) newLimitedToInfo.get(key).get(2) / 2) {
-                            ItemManager.buyItem(key,(JSONArray) newLimitedToInfo.get(key).get(5));
+                            ItemManager.buyItem(key,(JSONArray) newLimitedToInfo.get(key).get(5), (Long) newLimitedToInfo.get(key).get(1));
                         }} catch (Exception e) {e.printStackTrace();}
 
                     // Sending message

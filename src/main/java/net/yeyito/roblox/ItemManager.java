@@ -33,11 +33,12 @@ import java.util.regex.Pattern;
 
 public class ItemManager {
     static List<Long> boughtIDs = new ArrayList<>();
-    public static void buyItem(long id, @Nullable JSONArray price_data_points) {
+    static TextFile logger = new TextFile("src/main/resources/Logs/BuyingLogs.txt");
+    public static void buyItem(long id, @Nullable JSONArray price_data_points, @Nullable Long expected_price) {
         try {
             Main.discordBot.sendMessageOnRegisteredChannels("Buying item: " + id, 0);
-            System.out.println("Buying item: " + id);
-            String expected_price = "";
+            logger.writeString("\n{\n" + "\tFound buying candidate:" + id);
+            String detectedPrice = "";
             String seller_id = "";
             String expected_currency = "";
             String productID = "";
@@ -68,7 +69,7 @@ public class ItemManager {
                                 token = result;
                                 break;
                             case "data-expected-price=":
-                                expected_price = result;
+                                detectedPrice = result;
                                 break;
                             case "data-expected-seller-id=":
                                 seller_id = result;
@@ -86,19 +87,19 @@ public class ItemManager {
                     }
                 }
             }
+            logger.writeString("\n\t" + "Expected Price: " + expected_price);
+            logger.writeString("\n\t" + "Product ID: " + productID);
+            logger.writeString("\n\t" + "Token: " + token);
+            logger.writeString("\n\t" + "Expected Price: " + detectedPrice);
+            logger.writeString("\n\t" + "Seller ID: " + seller_id);
+            logger.writeString("\n\t" + "Expected Currency: " + expected_currency);
+            logger.writeString("\n\t" + "User Asset ID: " + user_asset_id);
+            logger.writeString("\n\t" + "User Robux: " + user_robux);
 
-            System.out.println("Product ID: " + productID);
-            System.out.println("Token: " + token);
-            System.out.println("Expected Price: " + expected_price);
-            System.out.println("Seller ID: " + seller_id);
-            System.out.println("Expected Currency: " + expected_currency);
-            System.out.println("User Asset ID: " + user_asset_id);
-            System.out.println("User Robux: " + user_robux);
-
-            if (buyModel(Integer.parseInt(user_robux), Integer.parseInt(expected_price), id, price_data_points)) {
+            if (buyModel(Integer.parseInt(user_robux), Integer.parseInt(detectedPrice), id, price_data_points)) {
                 JSONObject body = new JSONObject();
                 body.put("expectedCurrency", expected_currency);
-                body.put("expectedPrice", expected_price);
+                body.put("expectedPrice", detectedPrice);
                 body.put("expectedSellerId", seller_id);
                 body.put("userAssetId", user_asset_id);
 
@@ -115,10 +116,18 @@ public class ItemManager {
                 System.out.println(response.statusCode());
                 System.out.println(response.body());
                 if (response.statusCode() == 200) {
-                    Main.discordBot.sendMessageOnRegisteredChannels("Successfully bought item: " + id, 0);
+                    if (response.body().contains("\"purchased\":true")) {
+                        logger.writeString("\n\t[SUCCESS]\n\t" + response.body() + "\n}");
+                        Main.discordBot.sendMessageOnRegisteredChannels("Successfully bought item: " + id + "\nAt: " + detectedPrice + "R$", 0);
+                        System.out.println("SUCCESSFULLY BOUGHT ITEM: " + id + "\nAT: " + detectedPrice);
+                    } else {
+                        logger.writeString("\n\t[FAIL NFS]\n\t" + response.body() + "\n}");
+                        Main.discordBot.sendMessageOnRegisteredChannels("Failed to buy item:" + id + "\nReason: NFS", 0);
+                    }
                 }
             } else {
-                System.err.println("Item failed buyModel: " + id + " Current price: " + expected_price);
+                logger.writeString("\n\t[FAIL BUYMODEL]\n\tDetected Price: " + detectedPrice + "\n\tExpected Price: " + expected_price + "\n}");
+                Main.discordBot.sendMessageOnRegisteredChannels("Failed to buy item " + id + "\nReason: BuyModel\nDetected price: " + detectedPrice + "\nExpected price: " + expected_price,0);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -140,19 +149,19 @@ public class ItemManager {
             Double average90 = calculateAveragePriceLastDays(priceDataPointsArray, 90);
             Double average180 = calculateAveragePriceLastDays(priceDataPointsArray, 180);
             Double variance = calculateAverageVariance(priceDataPointsArray);
-            System.out.println("Average Variance: " + variance);
-            System.out.println("Average Price Last 30 Days: " + average30);
-            System.out.println("Average Price Last 90 Days: " + average90);
-            System.out.println("Average Price Last 180 Days: " + average180);
+            logger.writeString("\n\t" + "Average Variance: " + variance);
+            logger.writeString("\n\t" + "Average Price Last 30 Days: " + average30);
+            logger.writeString("\n\t" + "Average Price Last 90 Days: " + average90);
+            logger.writeString("\n\t" + "Average Price Last 180 Days: " + average180);
 
             if (average30 == null || average90 == null || average180 == null || variance == null) {return false;}
-            System.out.println("Passed Check #1");
+            logger.writeString("\n\t" + "Passed Check #1");
             if (average30/2*(1-variance) < currentPrice || average90/2*(1-variance) < currentPrice || average180/2*(1-variance) < currentPrice) {return false;}
-            System.out.println("Passed Check #2");
+            logger.writeString("\n\t" + "Passed Check #2");
             if (currentPrice > average30/2 || currentPrice > average90/2 || currentPrice > average180/2) {return false;}
-            System.out.println("Passed Check #3");
+            logger.writeString("\n\t" + "Passed Check #3");
             if (activityInDays(priceDataPointsArray,30) <= 3) {return false;}
-            System.out.println("Passed Check #4");
+            logger.writeString("\n\t" + "Passed Check #4");
             boughtIDs.add(itemID);
             return true;
         } else {

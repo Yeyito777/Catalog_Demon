@@ -11,8 +11,8 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public class ProxyUtil {
-    private static final List<Proxy> availableProxies = initAvailableProxies();
     private static final HashMap<Proxy,Integer> proxyCodes = new HashMap<>();
+    private static final HashMap<Proxy,String> authenticatedProxyToSecCookie = new HashMap<>();
 
     public static List<Proxy> initAvailableProxies() {
         List<Proxy> list = new ArrayList<>();
@@ -31,26 +31,39 @@ public class ProxyUtil {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] parts = line.split(":");
-                String ip = parts[0];
-                int port = Integer.parseInt(parts[1]);
-                if (Objects.equals(ip, "1") && port == 1) {list.add(null);} else
-                {list.add(httpProxy(ip, port));}
+                // Splitting at the first colon to separate the IP
+                String[] ipAndRest = line.split(":", 2);
+                String ip = ipAndRest[0];
+                String rest = ipAndRest[1];
+
+                // If the IP is "1" and the rest is "1", add a null proxy
+                if ("1".equals(ip) && "1".equals(rest)) {
+                    list.add(null);
+                    continue;
+                }
+
+                // Checking for the presence of "=" for the SECCOOKIE
+                if (rest.contains("=")) {
+                    String[] portAndCookie = rest.split("=", 2); // Splitting by "=" but limiting to 2 parts
+                    int port = Integer.parseInt(portAndCookie[0]);
+                    String secCookie = ".ROBLOSECURITY=_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_" + portAndCookie[1] + ";";
+                    Proxy proxy = httpProxy(ip, port);
+                    list.add(proxy);
+                    authenticatedProxyToSecCookie.put(proxy, secCookie); // Adding the proxy and its cookie to the hashmap
+                } else {
+                    int port = Integer.parseInt(rest);
+                    list.add(httpProxy(ip, port));
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static Proxy grabAvailableProxy() {
-        if (!availableProxies.isEmpty()) {
-            Collections.shuffle(availableProxies);
-            Proxy proxy = availableProxies.get(0);
-            availableProxies.remove(proxy);
-            return proxy;
-        }
-        else {return null;}
-    }
+
+
+    public static boolean isAuthenticated(Proxy proxy) {return authenticatedProxyToSecCookie.containsKey(proxy);}
+    public static String getCookie(Proxy proxy) {return authenticatedProxyToSecCookie.get(proxy);}
 
     public static Integer getProxyCode(Proxy proxy) {
         if (proxyCodes.containsKey(proxy)) {return proxyCodes.get(proxy);}
@@ -69,12 +82,5 @@ public class ProxyUtil {
             }
         }
         return null;
-    }
-
-    public static void freeProxy(Proxy proxy, int seconds) {
-        CompletableFuture.runAsync(() -> {
-            Main.threadSleep(seconds*1000);
-            availableProxies.add(proxy);
-        });
     }
 }

@@ -31,6 +31,7 @@ public class DiscordBot extends ListenerAdapter {
     public static boolean registered = false;
     public DiscordBot(String token, @Nullable Activity activity) {
         this.jda = JDABuilder.createDefault(token).setActivity(activity)
+                .setAutoReconnect(true)
                 .setEventPassthrough(true)
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
                 .build();

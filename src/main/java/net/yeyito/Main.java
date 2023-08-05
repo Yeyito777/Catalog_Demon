@@ -25,9 +25,7 @@ public class Main {
         listenForExitCommand();
 
         System.out.println("Waiting for registered channel");
-        while (discordBot.registeredTextChannels.isEmpty()) {
-            threadSleep(10);
-        }
+        while (discordBot.registeredTextChannels.isEmpty()) {threadSleep(10);}
         System.out.println("Channel registered.");
 
         LimitedTXTUpdater.updateLimitedsTXT();

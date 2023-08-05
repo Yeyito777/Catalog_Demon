@@ -130,7 +130,8 @@ public class CatalogScanner implements Runnable {
 
     public CatalogScanner(List<Long> IDs, Proxy proxy) {
         this.IDs = IDs;
-        this.secCookie = this.secCookie + new Random().nextInt(1000,9999);
+        this.secCookie = ProxyUtil.isAuthenticated(proxy) ? ProxyUtil.getCookie(proxy) : this.secCookie + new Random().nextInt(1000,9999);
+        this.inBetweenWaitTime = ProxyUtil.isAuthenticated(proxy) ? 500 : 5000;
         this.proxy = proxy;
         this.color_ID = new Random().nextInt(256,65536);
         ProxyUtil.setProxyCode(this.proxy,color_ID);
@@ -152,6 +153,7 @@ public class CatalogScanner implements Runnable {
             initComplete = true;
             new TextFile("src/main/resources/StackTrace.txt").deleteAllText();
             new TextFile("src/main/resources/Logs/ProxyLogs.txt").deleteAllText();
+            new TextFile("src/main/resources/Logs/BuyingLogs.txt").writeString("\n-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#");
         }
 
         while (true) {
@@ -172,6 +174,7 @@ public class CatalogScanner implements Runnable {
             for (int i = 0; i < 10; i++) {
                 try {
                     DeltaTime.start(this.color_ID);
+                    DeltaTime.start(this.color_ID+1);
                     LimitedPriceTracker.limitedToInfoMerge(Objects.requireNonNull(itemBulkToPriceRequest(listOfIDsLists.get(i), token, v2)));
                     Main.threadSleep(this.inBetweenWaitTime);
                 } catch (Exception e) {
